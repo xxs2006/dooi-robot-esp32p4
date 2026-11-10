@@ -1,0 +1,41 @@
+{
+  "scene_name": "proud",
+  "description": "得意场景：笑眼+紫呼吸+右臂上扬叉腰+哼声（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "show_off",
+      "weight": 100,
+      "description": "得意：笑眼+紫呼吸+右臂上扬左臂下垂+满意哼声",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy1.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_purple_2000ms.json"
+        },
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "laugh.json"
+        },
+        {
+          "time_ms": 350,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "proud_pose.json"
+        }
+      ]
+    }
+  ]
+}

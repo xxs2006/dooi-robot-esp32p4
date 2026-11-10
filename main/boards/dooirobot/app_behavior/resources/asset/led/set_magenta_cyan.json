@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_set_magenta_cyan",
+  "description": "LED左洋红右青色（跳舞）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "set", "left_color": "#FF00FF", "right_color": "#00FFFF" }
+  ]
+}

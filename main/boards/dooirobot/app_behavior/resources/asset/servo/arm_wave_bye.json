@@ -1,0 +1,15 @@
+{
+  "asset_id": "servo_arm_wave_bye",
+  "description": "挥手再见（左臂挥手）：左30→60→30→60→90归位",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 90, "right_arm": 90, "duration": 500 },
+    { "time_ms": 200,  "left_arm": 30, "right_arm": 90, "duration": 350 },
+    { "time_ms": 450,  "left_arm": 60, "right_arm": 90, "duration": 250 },
+    { "time_ms": 650,  "left_arm": 30, "right_arm": 90, "duration": 250 },
+    { "time_ms": 850,  "left_arm": 60, "right_arm": 90, "duration": 250 },
+    { "time_ms": 1050, "left_arm": 30, "right_arm": 90, "duration": 250 },
+    { "time_ms": 1250, "left_arm": 60, "right_arm": 90, "duration": 250 },
+    { "time_ms": 1900, "left_arm": 90, "right_arm": 90, "duration": 600 }
+  ]
+}

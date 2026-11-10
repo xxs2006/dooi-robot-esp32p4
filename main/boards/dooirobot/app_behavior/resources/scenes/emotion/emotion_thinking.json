@@ -1,0 +1,41 @@
+{
+  "scene_name": "thinking",
+  "description": "思考场景：看上+白呼吸+右臂托腮+眼动（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "hand_on_chin",
+      "weight": 100,
+      "description": "托腮思考：看上方中心+白呼吸+右臂60度+眼向右上瞟，自动复位",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "focus_top_center.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 2,
+          "asset": "breath_white_1500ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "thinking_right.json"
+        },
+        {
+          "time_ms": 700,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "eye_move.json"
+        }
+      ]
+    }
+  ]
+}

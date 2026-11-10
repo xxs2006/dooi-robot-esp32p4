@@ -1,0 +1,53 @@
+{
+  "scene_name": "kiss",
+  "description": "飞吻场景：眨眼+暖粉呼吸+右臂飞吻+飞吻音效（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "blow_kiss",
+      "weight": 100,
+      "description": "飞吻：眯眼笑+暖粉呼吸+右臂贴脸飞出+飞吻音",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy2.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_deeppink_800ms.json"
+        },
+        {
+          "time_ms": 200,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "laugh.json"
+        },
+        {
+          "time_ms": 300,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "kiss_blow.json"
+        },
+        {
+          "time_ms": 400,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "eye_move.json"
+        },
+        {
+          "time_ms": 1500,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        }
+      ]
+    }
+  ]
+}

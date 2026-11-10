@@ -1,0 +1,43 @@
+{
+  "asset_id": "panic_flail",
+  "description": "慌张：双臂快速乱摆",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 150
+    },
+    {
+      "time_ms": 120,
+      "left_arm": 30,
+      "right_arm": 120,
+      "duration": 120
+    },
+    {
+      "time_ms": 240,
+      "left_arm": 120,
+      "right_arm": 40,
+      "duration": 120
+    },
+    {
+      "time_ms": 360,
+      "left_arm": 40,
+      "right_arm": 110,
+      "duration": 120
+    },
+    {
+      "time_ms": 480,
+      "left_arm": 110,
+      "right_arm": 50,
+      "duration": 120
+    },
+    {
+      "time_ms": 600,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 300
+    }
+  ]
+}

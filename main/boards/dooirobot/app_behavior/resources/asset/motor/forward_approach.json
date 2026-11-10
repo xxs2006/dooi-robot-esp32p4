@@ -1,0 +1,9 @@
+{
+  "asset_id": "motor_forward_approach",
+  "description": "拥抱前进：速度60，400ms（扑上去抱）",
+  "type": "motor",
+  "keyframes": [
+    { "time_ms": 0,   "speed_l": 60, "speed_r": 60, "duration_ms": 400 },
+    { "time_ms": 400, "speed_l": 0,  "speed_r": 0,  "duration_ms": 0 }
+  ]
+}

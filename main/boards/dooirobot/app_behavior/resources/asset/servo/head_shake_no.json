@@ -1,0 +1,9 @@
+{
+  "asset_id": "servo_head_shake_no",
+  "description": "摇头拒绝：双臂收55度后归位90（配合电机左右转）",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,   "left_arm": 55, "right_arm": 55, "duration": 500 },
+    { "time_ms": 1450, "left_arm": 90, "right_arm": 90, "duration": 500 }
+  ]
+}

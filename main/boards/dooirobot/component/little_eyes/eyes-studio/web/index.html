@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Eyes Studio</title>
+<link rel="stylesheet" href="css/eyes.css">
+</head>
+<body>
+<header id="topbar">
+  <div class="brand">
+    <span class="logo-dot"></span>
+    <h1>Little Eyes Studio</h1>
+    <span class="sub">little_eyes 可视化设计平台 · 240×240 圆屏 · 双眼</span>
+  </div>
+  <div class="actions">
+    <span id="status-chips" class="chips"></span>
+    <button id="btn-device" class="btn ghost" title="通过 Web Serial 连接 ESP32 真机">连接真机</button>
+    <button id="btn-save" class="btn ghost">保存项目</button>
+    <button id="btn-import" class="btn ghost">导入</button>
+    <button id="btn-export-c" class="btn">导出 C</button>
+    <button id="btn-export-json" class="btn primary">导出 JSON</button>
+    <button id="btn-editor-expand" title="展开右侧显示/配置面板">‹ 配置</button>
+  </div>
+</header>
+
+<main id="layout">
+  <!-- 左：表情库 -->
+  <section id="library" class="panel">
+    <div class="panel-head">
+      <h2>表情库</h2>
+      <span id="expr-count" class="hint"></span>
+    </div>
+    <ul id="expr-list" class="expr-list"></ul>
+  </section>
+
+  <!-- 中：舞台 -->
+  <section id="stage" class="panel">
+    <div class="panel-head">
+      <h2>双目预览</h2>
+      <span id="engine-state" class="hint state-ok">engine loading…</span>
+    </div>
+    <div id="canvas-wrap">
+      <div class="eye-card">
+        <canvas id="cv-left" width="240" height="240"></canvas>
+        <div class="cap">LEFT</div>
+      </div>
+      <div class="eye-card">
+        <canvas id="cv-right" width="240" height="240"></canvas>
+        <div class="cap">RIGHT</div>
+      </div>
+    </div>
+    <div id="perf-bar" class="perf">
+      <span>rendered</span><b id="pf-rendered">-</b>
+      <span>skipped</span><b id="pf-skipped">-</b>
+      <span>rows/frame</span><b id="pf-rows">-</b>
+      <span>fps</span><b id="pf-fps">-</b>
+      <button id="btn-blink" class="btn mini">双眼眨眼</button>
+      <button id="btn-wink-l" class="btn mini">左单眨</button>
+      <button id="btn-wink-r" class="btn mini">右单眨</button>
+      <button id="btn-nudge" class="btn mini">随机看</button>
+    </div>
+  </section>
+
+  <!-- 右：编辑器 -->
+  <section id="editor" class="panel">
+    <div class="panel-head">
+      <h2>表达式编辑</h2>
+      <div class="head-right">
+        <div class="tabs">
+          <button data-tab="pose" class="tab on">Pose</button>
+          <button data-tab="auto" class="tab">Behavior</button>
+          <button data-tab="asset" class="tab">Look</button>
+        </div>
+        <button id="btn-editor-collapse" class="btn-collapse" title="收起右侧配置面板（把空间让给眼睛预览）">收起 ›</button>
+      </div>
+    </div>
+
+    <div id="tab-pose" class="tabpage on">
+      <div class="doc-name-row">
+        <input id="expr-name" class="text" placeholder="表达式名称">
+        <button id="btn-commit" class="btn small">以当前参数存为新表情</button>
+      </div>
+      <div id="pose-form" class="form"></div>
+    </div>
+
+    <div id="tab-auto" class="tabpage">
+      <div id="auto-form" class="form"></div>
+    </div>
+
+    <div id="tab-asset" class="tabpage">
+      <h3 class="grp">虹膜颜色 / 纹理</h3>
+      <div id="iris-grid" class="iris-grid"></div>
+      <p class="note">虹膜仅支持库内置 8 套极坐标纹理；自定义外观属于素材管线（Phase 2）。</p>
+    </div>
+  </section>
+</main>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="modal-title">导出</h2>
+      <button id="modal-close" class="btn ghost small">×</button>
+    </div>
+    <div id="modal-body" class="modal-body"></div>
+  </div>
+</div>
+
+<script src="lib/eyes_studio.js"></script>
+<script src="js/names.js"></script>
+<script src="js/preset_data.js"></script>
+<script src="js/schema.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/export.js"></script>
+<script src="js/bridge.js"></script>
+<script src="js/app.js"></script>
+<script>
+/* 右侧显示/配置面板：可收起；收起的宽度自动让给舞台，双眼预览等比放大 */
+(function () {
+  const COLLAPSE_KEY = 'little-eyes-editor-collapsed';
+  const wrap = document.getElementById('canvas-wrap');
+  const cBtn = document.getElementById('btn-editor-collapse');
+  const eBtn = document.getElementById('btn-editor-expand');
+
+  /* 依据舞台可用空间计算双眼直径（等比方形，随面板收起自动变大） */
+  function fitEyes() {
+    if (!wrap) return;
+    const cs = getComputedStyle(wrap);
+    const gap = parseFloat(cs.columnGap) || 0;
+    const innerW = wrap.clientWidth
+      - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const innerH = wrap.clientHeight
+      - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const n = Math.max(1, wrap.querySelectorAll('.eye-card').length);
+    const CAP_H = 28; /* gap + LEFT/RIGHT 标签 */
+    const size = Math.floor(Math.min((innerW - gap * (n - 1)) / n, innerH - CAP_H));
+    const px = Math.max(120, size) + 'px';
+    wrap.querySelectorAll('.eye-card canvas').forEach(function (c) {
+      c.style.setProperty('--eye-size', px);
+    });
+  }
+
+  function setCollapsed(collapsed) {
+    document.body.classList.toggle('editor-collapsed', collapsed);
+    try { localStorage.setItem(COLLAPSE_KEY, collapsed ? '1' : '0'); } catch (e) {}
+    if (cBtn) cBtn.blur();
+    if (eBtn) eBtn.blur();
+    fitEyes();
+    /* 等收起/展开动画走完再量一次，尺寸贴合最终布局 */
+    setTimeout(fitEyes, 260);
+  }
+
+  if (cBtn) cBtn.addEventListener('click', function () { setCollapsed(true); });
+  if (eBtn) eBtn.addEventListener('click', function () { setCollapsed(false); });
+
+  let saved = false;
+  try { saved = localStorage.getItem(COLLAPSE_KEY) === '1'; } catch (e) {}
+  if (saved) document.body.classList.add('editor-collapsed');
+
+  if (wrap && typeof ResizeObserver === 'function') {
+    new ResizeObserver(fitEyes).observe(wrap);
+  }
+  window.addEventListener('resize', fitEyes);
+  window.addEventListener('load', fitEyes);
+  fitEyes();
+  setTimeout(fitEyes, 600);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "scene_name": "surprised",
+  "description": "惊讶场景：瞪眼+蓝灯+双臂抬起（高优先级，可中断）",
+  "priority": "high",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "标准惊讶：瞪眼蓝灯抬双臂，自动复位至135度",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "surprised.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "amazed.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 6,
+          "asset": "blink_blue_500ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "body_startle_jolt.json"
+        }
+      ]
+    }
+  ]
+}

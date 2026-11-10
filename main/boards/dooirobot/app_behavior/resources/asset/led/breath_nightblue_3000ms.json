@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_breath_nightblue_3000ms",
+  "description": "LED深夜蓝色呼吸灯，周期3000ms（晚安深睡用）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "breath", "color": "#000022", "period_ms": 3000, "symmetric": true }
+  ]
+}

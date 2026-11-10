@@ -1,0 +1,8 @@
+{
+  "asset_id": "eye_move",
+  "description": "眼球移动到指定位置 (x,y) -1~1 范围，duration_ms 过渡时长",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "move_x": 0.0, "move_y": 0.0, "duration_ms": 300 }
+  ]
+}

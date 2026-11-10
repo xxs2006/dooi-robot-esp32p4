@@ -1,0 +1,35 @@
+{
+  "scene_name": "sleep",
+  "description": "休眠场景：眼闭+灯灭+双臂垂落（低优先级，可中断）",
+  "priority": "low",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "go_sleep",
+      "weight": 100,
+      "description": "休眠：中性眼渐暗+关灯+双臂缓缓垂落自然",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "neutral.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 1,
+          "asset": "off.json"
+        },
+        {
+          "time_ms": 200,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "sleep_rest.json"
+        }
+      ]
+    }
+  ]
+}

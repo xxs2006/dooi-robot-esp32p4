@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_set_blue",
+  "description": "LED左右设为蓝色",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "set", "left_color": "#0000FF", "right_color": "#0000FF" }
+  ]
+}

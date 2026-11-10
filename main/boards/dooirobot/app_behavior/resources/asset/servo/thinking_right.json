@@ -1,0 +1,8 @@
+{
+  "asset_id": "servo_thinking_right",
+  "description": "思考动作：右臂弯曲到60度（手托下巴状）",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0, "left_arm": 135, "right_arm": 60, "duration": 800 }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "scene_name": "action_focus_below_center",
+  "description": "注视下方中央（低优先级，可中断）",
+  "priority": "low",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "look_down",
+      "weight": 100,
+      "description": "低头看下方中心：仅切换表情，无其他动作",
+      "timeline": [
+        { "time_ms": 0, "type": "eye", "repeat": 1, "asset": "focus_below_center.json" }
+      ]
+    }
+  ]
+}

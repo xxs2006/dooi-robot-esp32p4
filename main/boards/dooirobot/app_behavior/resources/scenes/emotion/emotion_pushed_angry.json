@@ -1,0 +1,47 @@
+{
+  "scene_name": "pushed_angry",
+  "description": "第二次被推（触发生气）：怒瞪眼1+红灯+双臂135+捶打3次+关灯（高优先级，可中断）",
+  "priority": "high",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "angry_punch",
+      "weight": 100,
+      "description": "愤怒爆发：怒瞪+红灯+双臂举+双拳快速捶3次+关灯，序列结束自动复位135度",
+      "timeline": [
+        {
+          "time_ms": 50,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "angry.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "angry1.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_red.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "arm_punch_angry.json"
+        },
+        {
+          "time_ms": 1500,
+          "type": "led",
+          "repeat": 1,
+          "asset": "off.json"
+        }
+      ]
+    }
+  ]
+}

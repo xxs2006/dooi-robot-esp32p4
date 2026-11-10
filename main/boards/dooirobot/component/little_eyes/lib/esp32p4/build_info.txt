@@ -1,0 +1,14 @@
+target      : esp32p4
+compiler    : D:\RD\Environment\Espressif\tools\riscv32-esp-elf\esp-14.2.0_20251107\riscv32-esp-elf\bin\riscv32-esp-elf-gcc.exe
+built at    : 2026-09-06T10:46:23
+flags from  : tools/flags_esp32p4.txt
+output      : liblittle_eyes.a
+sources     :
+  - src/eyes_core.c
+  - src/eyes_preset.c
+  - src/eyes_port_default.c
+  - src/eyes_port_fb.c
+  - src/assets/eye_source.c
+  - src/assets/disp_240_125.c
+  - src/assets/polarAngle_240.c
+  - src/assets/polarDist_240_130_95_0.c

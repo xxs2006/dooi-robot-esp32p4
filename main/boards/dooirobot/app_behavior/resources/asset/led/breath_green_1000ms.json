@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_breath_green_1000ms",
+  "description": "LED绿色呼吸灯，周期1000ms（跳舞用）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "breath", "color": "#55FF55", "period_ms": 1000, "symmetric": true }
+  ]
+}

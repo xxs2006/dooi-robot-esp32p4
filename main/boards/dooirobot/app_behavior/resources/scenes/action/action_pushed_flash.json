@@ -1,0 +1,41 @@
+﻿{
+  "scene_name": "action_pushed_flash",
+  "description": "第一次被推：看下+黄灯亮500ms→灭（高优先级，可中断）",
+  "priority": "high",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "first_warning",
+      "weight": 100,
+      "description": "被推后警告：眼神下垂+黄色警示灯亮500ms后关闭（不做肢体动作）",
+      "timeline": [
+        {
+          "time_ms": 50,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "focus_below_center.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_yellow.json"
+        },
+        {
+          "time_ms": 500,
+          "type": "led",
+          "repeat": 1,
+          "asset": "off.json"
+        }
+      ]
+    }
+  ]
+}

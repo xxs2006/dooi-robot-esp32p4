@@ -1,0 +1,8 @@
+{
+  "asset_id": "focus_top_center",
+  "description": "注视上方中央（思考状）",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "expr": "focus_top_center" }
+  ]
+}

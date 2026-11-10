@@ -1,0 +1,9 @@
+{
+  "asset_id": "motor_backward_quick",
+  "description": "害羞快速后退：速度-80，200ms",
+  "type": "motor",
+  "keyframes": [
+    { "time_ms": 0,   "speed_l": -80, "speed_r": -80, "duration_ms": 200 },
+    { "time_ms": 200, "speed_l": 0,   "speed_r": 0,   "duration_ms": 0 }
+  ]
+}

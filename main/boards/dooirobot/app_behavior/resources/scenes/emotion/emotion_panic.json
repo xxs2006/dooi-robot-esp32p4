@@ -1,0 +1,41 @@
+{
+  "scene_name": "panic",
+  "description": "慌张场景：惊眼+红快闪+双臂乱摆+惊呼声（高优先级，可中断）",
+  "priority": "high",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "fluster",
+      "weight": 100,
+      "description": "慌张：惊眼+红250ms快闪+双臂快速乱摆+惊呼声",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "amazed.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "blink_red_250ms.json"
+        },
+        {
+          "time_ms": 50,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "surprised.json"
+        },
+        {
+          "time_ms": 100,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "panic_flail.json"
+        }
+      ]
+    }
+  ]
+}

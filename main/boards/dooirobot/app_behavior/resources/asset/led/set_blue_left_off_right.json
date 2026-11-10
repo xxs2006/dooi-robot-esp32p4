@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_set_blue_left_off_right",
+  "description": "LED左灭右蓝",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "set", "left_color": "#000000", "right_color": "#0000FF" }
+  ]
+}

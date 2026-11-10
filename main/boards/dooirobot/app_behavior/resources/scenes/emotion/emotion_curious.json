@@ -1,0 +1,77 @@
+{
+  "scene_name": "curious",
+  "description": "好奇场景：左上/右上瞟+左右白灯+右臂抬+左右转+前冲+眼回正（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "peek_left_right",
+      "weight": 100,
+      "description": "左右探头：瞟左上→左转→瞟右上→右转→瞪眼前冲→眼回正（舵机已自复位）",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "wow.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "focus_top_left.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_white_left_dim_right.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "curious_tilt.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "turn_left.json"
+        },
+        {
+          "time_ms": 800,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "focus_top_right.json"
+        },
+        {
+          "time_ms": 800,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "turn_right.json"
+        },
+        {
+          "time_ms": 1600,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "amazed.json"
+        },
+        {
+          "time_ms": 1600,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "forward_peek.json"
+        },
+        {
+          "time_ms": 2450,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "eye_move.json"
+        }
+      ]
+    }
+  ]
+}

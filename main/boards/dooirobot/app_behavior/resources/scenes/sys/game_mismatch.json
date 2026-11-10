@@ -1,0 +1,21 @@
+{
+  "scene_name": "game_mismatch",
+  "description": "猜错：宝石红虹膜，双红LED，愤怒表情，握拳动作",
+  "priority": "high",
+  "config": {
+    "no_restore": true
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "猜错：愤怒反馈",
+      "timeline": [
+        { "time_ms": 0, "type": "iris",  "asset": "ruby.json" },
+        { "time_ms": 0, "type": "led",   "asset": "game_red_both.json" },
+        { "time_ms": 0, "type": "eye",   "asset": "angry.json" },
+        { "time_ms": 0, "type": "servo", "asset": "arm_punch_angry.json" }
+      ]
+    }
+  ]
+}

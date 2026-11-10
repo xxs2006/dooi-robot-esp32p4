@@ -1,0 +1,59 @@
+﻿{
+  "scene_name": "action_morning",
+  "description": "早安流程：睡觉→揉眼→大伸展→苏醒笑→彩虹（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "good_morning",
+      "weight": 100,
+      "description": "起床全流程：睡眼看下→深琥珀呼吸→揉右眼皮→双臂高举大伸展→放下→笑眼+彩虹，舵机自复位",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "focus_below_center.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_darkamber_2500ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "morning_routine.json"
+        },
+        {
+          "time_ms": 5600,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_lightamber_1500ms.json"
+        },
+        {
+          "time_ms": 9800,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 9800,
+          "type": "led",
+          "repeat": 3,
+          "asset": "rainbow_1500ms.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "asset_id": "focus_top_right",
+  "description": "注视右上方",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "expr": "focus_top_right" }
+  ]
+}

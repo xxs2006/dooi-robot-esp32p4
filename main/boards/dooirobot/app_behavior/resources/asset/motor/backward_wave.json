@@ -1,0 +1,9 @@
+{
+  "asset_id": "motor_backward_wave",
+  "description": "挥手再见后退：速度-60，500ms（边退边挥）",
+  "type": "motor",
+  "keyframes": [
+    { "time_ms": 0,   "speed_l": -60, "speed_r": -60, "duration_ms": 500 },
+    { "time_ms": 500, "speed_l": 0,   "speed_r": 0,   "duration_ms": 0 }
+  ]
+}

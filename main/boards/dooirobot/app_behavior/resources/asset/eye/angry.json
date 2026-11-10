@@ -1,0 +1,8 @@
+{
+  "asset_id": "angry",
+  "description": "生气",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "expr": "angry" }
+  ]
+}

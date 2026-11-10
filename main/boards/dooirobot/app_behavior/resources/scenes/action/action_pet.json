@@ -1,0 +1,41 @@
+﻿{
+  "scene_name": "action_pet",
+  "description": "被摸头场景：眯眼开心+暖白呼吸+双臂内收轻晃+轻哼（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "headpat",
+      "weight": 100,
+      "description": "被摸头：眯眼笑+暖白呼吸+双臂内收轻晃+满足音",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy2.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_warmwhite_1500ms.json"
+        },
+        {
+          "time_ms": 150,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 300,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "pet_headpat.json"
+        }
+      ]
+    }
+  ]
+}

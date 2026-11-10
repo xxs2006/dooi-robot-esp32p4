@@ -1,0 +1,8 @@
+{
+  "asset_id": "angry1",
+  "description": "愤怒表情1（更强烈）",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "expr": "angry1" }
+  ]
+}

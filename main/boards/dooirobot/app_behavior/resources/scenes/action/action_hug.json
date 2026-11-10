@@ -1,0 +1,47 @@
+﻿{
+  "scene_name": "action_hug",
+  "description": "拥抱场景：笑眼+橙呼吸+双臂抱+上前进+停留+放开（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "big_hug",
+      "weight": 100,
+      "description": "热情拥抱：笑眼+橙呼吸1s+上前+双臂张合抱→停留1s→放开归位（舵机自复位）",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_orange_1000ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "arm_hug_open_close.json"
+        },
+        {
+          "time_ms": 800,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "forward_approach.json"
+        }
+      ]
+    }
+  ]
+}

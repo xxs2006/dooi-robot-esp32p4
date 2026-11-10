@@ -1,0 +1,41 @@
+{
+  "scene_name": "blush",
+  "description": "害羞脸红场景：眯眼+粉呼吸+双臂内收+轻哼（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "shy_blush",
+      "weight": 100,
+      "description": "害羞脸红：眯眼笑+粉呼吸+双臂内收+满足轻哼",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy2.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 1,
+          "asset": "breath_pink_2000ms.json"
+        },
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 350,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "blush_shrink.json"
+        }
+      ]
+    }
+  ]
+}

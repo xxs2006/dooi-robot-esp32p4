@@ -1,0 +1,21 @@
+{
+  "scene_name": "game_start",
+  "description": "游戏开始：恢复默认虹膜，LED关闭，舵机归中，眼睛默认表情",
+  "priority": "high",
+  "config": {
+    "no_restore": true
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "游戏开始：恢复默认状态",
+      "timeline": [
+        { "time_ms": 0, "type": "iris",  "asset": "default.json" },
+        { "time_ms": 0, "type": "eye",   "asset": "neutral.json" },
+        { "time_ms": 0, "type": "led",   "asset": "off.json" },
+        { "time_ms": 0, "type": "servo", "asset": "arm_stretch_relax.json" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "asset_id": "servo_encourage_cheer",
+  "description": "鼓励加油：右170→120→170→90 → 左170→120→170 → 双臂170→90",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 90,  "right_arm": 170, "duration": 500 },
+    { "time_ms": 400,  "left_arm": 90,  "right_arm": 120, "duration": 250 },
+    { "time_ms": 650,  "left_arm": 90,  "right_arm": 170, "duration": 250 },
+    { "time_ms": 900,  "left_arm": 90,  "right_arm": 120, "duration": 250 },
+    { "time_ms": 1150, "left_arm": 90,  "right_arm": 170, "duration": 250 },
+    { "time_ms": 1550, "left_arm": 90,  "right_arm": 90,  "duration": 300 },
+    { "time_ms": 1550, "left_arm": 170, "right_arm": 90,  "duration": 300 },
+    { "time_ms": 1950, "left_arm": 120, "right_arm": 90,  "duration": 250 },
+    { "time_ms": 2200, "left_arm": 170, "right_arm": 90,  "duration": 250 },
+    { "time_ms": 2450, "left_arm": 120, "right_arm": 90,  "duration": 250 },
+    { "time_ms": 2700, "left_arm": 170, "right_arm": 90,  "duration": 250 },
+    { "time_ms": 3100, "left_arm": 170, "right_arm": 170, "duration": 300 },
+    { "time_ms": 3800, "left_arm": 90,  "right_arm": 90,  "duration": 600 }
+  ]
+}

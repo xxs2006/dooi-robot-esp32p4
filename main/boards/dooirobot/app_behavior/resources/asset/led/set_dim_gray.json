@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_set_dim_gray",
+  "description": "LED左右设为暗灰色（无聊）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "set", "left_color": "#222222", "right_color": "#222222" }
+  ]
+}

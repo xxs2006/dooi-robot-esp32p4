@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>DooiRobot 设置</title>
+<style>
+:root {
+  --bg0:#0d1117; --bg1:#161b22; --bg2:#21262d; --bg3:#30363d;
+  --tx0:#e6edf3; --tx1:#8b949e; --tx2:#484f58;
+  --ac:#58a6ff; --ac2:#1f6feb;
+  --ok:#3fb950; --warn:#d29922; --err:#f85149;
+  --radius:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg0);color:var(--tx0);padding:12px;
+  -webkit-user-select:none;user-select:none}
+header{display:flex;align-items:center;gap:12px;padding:12px;
+  background:var(--bg1);border-radius:var(--radius);margin-bottom:16px;
+  border:1px solid var(--bg3)}
+header h1{font-size:18px;font-weight:600;flex:1}
+.back-btn{background:var(--bg2);border:1px solid var(--bg3);color:var(--tx0);
+  padding:6px 12px;border-radius:6px;font-size:14px;cursor:pointer;
+  text-decoration:none;display:inline-block}
+.back-btn:hover{border-color:var(--ac)}
+
+.panel{background:var(--bg1);border:1px solid var(--bg3);border-radius:var(--radius);
+  padding:16px;margin-bottom:12px}
+.panel-title{font-size:15px;color:var(--tx0);margin-bottom:12px;font-weight:600;
+  display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'';width:3px;height:16px;background:var(--ac);
+  border-radius:2px}
+
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;color:var(--tx1);margin-bottom:6px}
+.form-row input[type=text],.form-row input[type=password]{
+  width:100%;padding:10px;background:var(--bg2);border:1px solid var(--bg3);
+  color:var(--tx0);border-radius:6px;font-size:14px}
+.form-row input:focus{outline:none;border-color:var(--ac)}
+.form-row select{width:100%;padding:10px;background:var(--bg2);
+  border:1px solid var(--bg3);color:var(--tx0);border-radius:6px;font-size:14px}
+
+.switch-row{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0}
+.switch-row label{font-size:14px;color:var(--tx0)}
+.switch{position:relative;width:50px;height:26px;background:var(--bg3);
+  border-radius:13px;cursor:pointer;transition:.3s}
+.switch.on{background:var(--ok)}
+.switch::after{content:'';position:absolute;width:20px;height:20px;
+  background:#fff;border-radius:50%;top:3px;left:3px;transition:.3s;
+  box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.switch.on::after{left:27px}
+
+.btn-group{display:flex;gap:8px;margin-top:16px}
+.btn{flex:1;padding:10px;border:none;border-radius:8px;font-size:14px;
+  font-weight:500;cursor:pointer;transition:.2s}
+.btn-primary{background:var(--ac2);color:#fff}
+.btn-primary:hover{background:var(--ac)}
+.btn-primary:active{transform:scale(.97)}
+.btn-danger{background:#6e1a1a;color:var(--err);border:1px solid var(--err)}
+.btn-danger:hover{background:#8b2020}
+.preset-btn{background:var(--bg2);border:1px solid var(--bg3);color:var(--tx0);
+  padding:8px 0;font-size:13px}
+.preset-btn:hover{border-color:var(--ac)}
+
+/* ── 灵敏度滑块区域标注 ── */
+.range-labels{display:flex;justify-content:space-between;
+  font-size:11px;color:var(--tx2);margin-top:4px;padding:0 2px}
+.sens-badge{
+  display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;
+  font-weight:600;background:var(--bg2);border:1px solid var(--bg3);
+  color:var(--ac);min-width:52px;text-align:center}
+
+.hint{font-size:12px;color:var(--tx2);margin-top:4px;line-height:1.4}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  background:var(--bg1);border:1px solid var(--bg3);padding:12px 20px;
+  border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.3);
+  display:none;z-index:1000;animation:slideDown .3s}
+.toast.show{display:block}
+.toast.success{border-color:var(--ok);color:var(--ok)}
+.toast.error{border-color:var(--err);color:var(--err)}
+@keyframes slideDown{from{opacity:0;transform:translate(-50%,-20px)}
+  to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚙️ 系统设置</h1>
+  <a href="/" class="back-btn">← 返回控制</a>
+</header>
+
+<!-- ══════════════════════════════════════════════════
+     蓝牙
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">📡 蓝牙设置</div>
+  <div class="switch-row">
+    <label>蓝牙开关</label>
+    <div class="switch" id="btSwitch" onclick="toggleBT()"></div>
+  </div>
+  <div class="hint">关闭蓝牙可节省功耗，但会断开手柄连接</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     OTA
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">🌐 平台配置</div>
+  <div class="form-row">
+    <label>OTA 更新服务器 URL</label>
+    <input type="text" id="otaUrl" placeholder="http://example.com">
+    <div class="hint">留空则使用默认服务器</div>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="saveOtaUrl()">保存 URL</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     眼睛
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">👁️ 眼睛风格</div>
+  <div class="form-row">
+    <label>虹膜纹理</label>
+    <select id="eyeIris">
+      <option value="0">🔵 默认</option>
+      <option value="1">🟢 翡翠绿</option>
+      <option value="2">🟣 紫色</option>
+      <option value="3">🔵 蓝色</option>
+      <option value="4">🟡 黄色</option>
+      <option value="5">⚪ 灰色</option>
+      <option value="6">🟠 橙色</option>
+      <option value="7">🍷 酒红色</option>
+    </select>
+    <div class="hint">设置机器人眼睛的默认颜色风格</div>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="saveEyeIris()">保存风格</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     硬件反向
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">🔄 硬件反向设置</div>
+  <div class="switch-row">
+    <label>左电机反向 (Motor L)</label>
+    <div class="switch" id="invMotL" onclick="toggleSwitch('invMotL')"></div>
+  </div>
+  <div class="switch-row">
+    <label>右电机反向 (Motor R)</label>
+    <div class="switch" id="invMotR" onclick="toggleSwitch('invMotR')"></div>
+  </div>
+  <div class="switch-row">
+    <label>左舵机反向 (Servo L)</label>
+    <div class="switch" id="invSrvL" onclick="toggleSwitch('invSrvL')"></div>
+  </div>
+  <div class="switch-row">
+    <label>右舵机反向 (Servo R)</label>
+    <div class="switch" id="invSrvR" onclick="toggleSwitch('invSrvR')"></div>
+  </div>
+  <div class="hint">开启后：电机前后对调；舵机 0-180度 对调。</div>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="saveHwInvert()">保存反向设置</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     舵机 Trim
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">🎯 舵机校准 (Trim)</div>
+  <div class="form-row">
+    <label>左舵机偏移 (Servo L Trim)：<span id="trimLVal">0.0</span>°</label>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--tx1)">-30°</span>
+      <input type="range" id="trimL" min="-300" max="300" value="0" step="1"
+             style="flex:1;accent-color:var(--ac)"
+             oninput="onTrimInput('trimL')">
+      <span style="font-size:12px;color:var(--tx1)">+30°</span>
+    </div>
+  </div>
+  <div class="form-row">
+    <label>右舵机偏移 (Servo R Trim)：<span id="trimRVal">0.0</span>°</label>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--tx1)">-30°</span>
+      <input type="range" id="trimR" min="-300" max="300" value="0" step="1"
+             style="flex:1;accent-color:var(--ac)"
+             oninput="onTrimInput('trimR')">
+      <span style="font-size:12px;color:var(--tx1)">+30°</span>
+    </div>
+  </div>
+  <div class="hint">
+    校准值用于修正机械安装误差，范围 ±30°，精度 0.1°。<br>
+    左右两侧<strong style="color:var(--ok)">同号即同一物理方向</strong>：右侧舵机镜像安装，
+    固件会自动把右侧偏移量取反后输出，无需手工反号。<br>
+    保存后会自动重新下发下方「舵机测试」的当前角度，方便立刻观察效果。
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="saveServoTrim()">保存校准</button>
+    <button class="btn" style="background:var(--bg2);border:1px solid var(--bg3)"
+            onclick="resetServoTrim()">重置为 0</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     舵机测试（校准后即时验证）
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">🕹️ 舵机测试</div>
+
+  <div class="switch-row">
+    <label>左右联动（同步相同角度）</label>
+    <div class="switch on" id="srvSync" onclick="toggleSwitch('srvSync')"></div>
+  </div>
+
+  <div class="form-row">
+    <label>左舵机角度：<span class="sens-badge" id="srvLVal">90°</span></label>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--tx1)">0°</span>
+      <input type="range" id="srvL" min="0" max="180" step="1" value="90"
+             style="flex:1;accent-color:var(--ac)"
+             oninput="onServoAngleInput('L')" onchange="applyServoAngle()">
+      <span style="font-size:12px;color:var(--tx1)">180°</span>
+    </div>
+    <div class="hint" id="srvLPhys">硬件输出角：-- °</div>
+  </div>
+
+  <div class="form-row">
+    <label>右舵机角度：<span class="sens-badge" id="srvRVal">90°</span></label>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--tx1)">0°</span>
+      <input type="range" id="srvR" min="0" max="180" step="1" value="90"
+             style="flex:1;accent-color:var(--ac)"
+             oninput="onServoAngleInput('R')" onchange="applyServoAngle()">
+      <span style="font-size:12px;color:var(--tx1)">180°</span>
+    </div>
+    <div class="hint" id="srvRPhys">硬件输出角：-- °</div>
+  </div>
+
+  <div class="btn-group" style="margin-top:8px">
+    <button class="btn preset-btn" onclick="servoPreset(0)">0°</button>
+    <button class="btn preset-btn" onclick="servoPreset(45)">45°</button>
+    <button class="btn preset-btn" onclick="servoPreset(90)">90°</button>
+    <button class="btn preset-btn" onclick="servoPreset(135)">135°</button>
+    <button class="btn preset-btn" onclick="servoPreset(180)">180°</button>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="applyServoAngle()">立即应用角度</button>
+  </div>
+
+  <div class="hint">
+    滑块松手即下发；此处输入的是<strong>逻辑角度</strong>，
+    右侧镜像、舵机反向与校准偏移均已由固件自动处理。
+    舵机空闲约 3 秒后自动断电，可放心调试。
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     麦克风增益
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">🎙️ 麦克风增益</div>
+  <div class="form-row">
+    <label>Mic 增益：<span id="micGainVal">0.0</span> dB</label>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--tx1)">0 dB</span>
+      <input type="range" id="micGain" min="0" max="340" value="0" step="1"
+             style="flex:1;accent-color:var(--ac)"
+             oninput="document.getElementById('micGainVal').textContent=(this.value/10).toFixed(1)">
+      <span style="font-size:12px;color:var(--tx1)">34 dB</span>
+    </div>
+  </div>
+  <div class="hint">调节麦克风采集增益，范围 0～34 dB，精度 0.1 dB。增益过高可能引起失真。</div>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="saveMicGain()">保存增益</button>
+    <button class="btn" style="background:var(--bg2);border:1px solid var(--bg3)"
+            onclick="resetMicGain()">重置为 0</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  ★  触摸按键灵敏度（新增）
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">👆 触摸按键灵敏度</div>
+
+  <div class="form-row">
+    <label>
+      触发阈值：<span class="sens-badge"><span id="touchSensVal">0.7</span>%</span>
+      <span style="font-size:11px;color:var(--tx2);margin-left:6px">越小越灵敏</span>
+    </label>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+      <span style="font-size:12px;color:var(--ok)">灵敏</span>
+      <input type="range" id="touchSens"
+             min="3" max="50" step="1" value="7"
+             style="flex:1;accent-color:var(--ac)"
+             oninput="onTouchSensInput(this.value)">
+      <span style="font-size:12px;color:var(--tx1)">迟钝</span>
+    </div>
+    <div class="range-labels">
+      <span>0.3%</span>
+      <span>1.0%</span>
+      <span>2.0%</span>
+      <span>3.0%</span>
+      <span>5.0%</span>
+    </div>
+  </div>
+
+  <div class="hint">
+    调节触摸按键的触发阈值，范围 0.3%～5.0%，默认 0.7%，精度 0.1%。<br>
+    更改后<strong style="color:var(--ok)">立即热重校准</strong>，无需重启。
+    若出现误触请增大阈值，无法触发请减小阈值。
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="saveTouchSensitivity()">应用灵敏度</button>
+    <button class="btn" style="background:var(--bg2);border:1px solid var(--bg3)"
+            onclick="resetTouchSensitivity()">恢复默认 (0.7%)</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     WiFi
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">📶 WiFi 配置</div>
+  <div class="form-row">
+    <label>WiFi 名称 (SSID)</label>
+    <input type="text" id="wifiSsid" placeholder="输入WiFi名称">
+  </div>
+  <div class="form-row">
+    <label>WiFi 密码</label>
+    <input type="password" id="wifiPass" placeholder="输入WiFi密码">
+  </div>
+  <div class="hint">⚠️ 修改WiFi后设备将自动重启并尝试连接新网络</div>
+  <div class="btn-group">
+    <button class="btn btn-danger" onclick="saveWifi()">保存并重启</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     出厂重置
+════════════════════════════════════════════════════ -->
+<div class="panel">
+  <div class="panel-title">⚠️ 系统管理</div>
+  <div class="hint" style="margin-bottom:12px">恢复出厂设置将清除所有配置并重启设备。</div>
+  <div class="btn-group">
+    <button class="btn btn-danger" onclick="factoryReset()">恢复出厂设置</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ──────────────────────────────────────────────────
+   工具函数
+────────────────────────────────────────────────── */
+let btEnabled = false;
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function apiCall(action, data = {}) {
+  try {
+    const res = await fetch('/api/config', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ action, ...data })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } catch (e) {
+    showToast('操作失败: ' + e.message, 'error');
+    throw e;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   加载配置（合并后的唯一版本）
+   原文中存在两个 loadConfig 定义，第二个会覆盖第一个；
+   此处合并为一个，包含所有字段。
+────────────────────────────────────────────────── */
+async function loadConfig() {
+  try {
+    const cfg = await apiCall('get');
+
+    /* 蓝牙 */
+    btEnabled = cfg.bluetooth_enabled || false;
+    document.getElementById('btSwitch').classList.toggle('on', btEnabled);
+
+    /* OTA / 眼睛 / WiFi */
+    document.getElementById('otaUrl').value   = cfg.ota_url   || '';
+    document.getElementById('eyeIris').value  = cfg.eye_iris  || 0;
+    document.getElementById('wifiSsid').value = cfg.wifi_ssid || '';
+
+    /* 硬件反向 */
+    document.getElementById('invMotL').classList.toggle('on', cfg.inv_mot_l || false);
+    document.getElementById('invMotR').classList.toggle('on', cfg.inv_mot_r || false);
+    document.getElementById('invSrvL').classList.toggle('on', cfg.inv_srv_l || false);
+    document.getElementById('invSrvR').classList.toggle('on', cfg.inv_srv_r || false);
+
+    /* 舵机 Trim */
+    const trimL = cfg.srv_trim_l || 0;
+    const trimR = cfg.srv_trim_r || 0;
+    document.getElementById('trimL').value         = Math.round(trimL * 10);
+    document.getElementById('trimLVal').textContent = trimL.toFixed(1);
+    document.getElementById('trimR').value         = Math.round(trimR * 10);
+    document.getElementById('trimRVal').textContent = trimR.toFixed(1);
+
+    /* 麦克风增益 */
+    const micGain = cfg.mic_gain || 0.0;
+    document.getElementById('micGain').value         = Math.round(micGain * 10);
+    document.getElementById('micGainVal').textContent = micGain.toFixed(1);
+
+    /* ★ 触摸按键灵敏度
+       API 返回 touch_sens_x1000（整数，ratio×1000）
+       未配置时服务端默认返回 7（=0.7%） */
+    const sensX1000 = (cfg.touch_sens_x1000 != null) ? cfg.touch_sens_x1000 : 7;
+    document.getElementById('touchSens').value        = sensX1000;
+    document.getElementById('touchSensVal').textContent = (sensX1000 / 10).toFixed(1);
+
+    /* 舵机测试：刷新硬件输出角预览 */
+    refreshServoLabels();
+
+  } catch (e) {
+    showToast('配置加载失败', 'error');
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   蓝牙
+────────────────────────────────────────────────── */
+async function toggleBT() {
+  btEnabled = !btEnabled;
+  document.getElementById('btSwitch').classList.toggle('on', btEnabled);
+  try {
+    await apiCall('set_bluetooth', { enabled: btEnabled });
+    showToast(btEnabled ? '蓝牙已开启' : '蓝牙已关闭');
+  } catch (e) {
+    btEnabled = !btEnabled;
+    document.getElementById('btSwitch').classList.toggle('on', btEnabled);
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   OTA / 眼睛
+────────────────────────────────────────────────── */
+async function saveOtaUrl() {
+  const url = document.getElementById('otaUrl').value.trim();
+  try {
+    await apiCall('set_ota_url', { url });
+    showToast('OTA URL 已保存');
+  } catch (e) {}
+}
+
+async function saveEyeIris() {
+  const iris = parseInt(document.getElementById('eyeIris').value);
+  try {
+    await apiCall('set_eye_iris', { iris });
+    showToast('眼睛风格已保存');
+  } catch (e) {}
+}
+
+/* ──────────────────────────────────────────────────
+   硬件反向
+────────────────────────────────────────────────── */
+function toggleSwitch(id) {
+  document.getElementById(id).classList.toggle('on');
+  if (id === 'invSrvL' || id === 'invSrvR') refreshServoLabels();
+}
+
+async function saveHwInvert() {
+  const data = {
+    inv_mot_l: document.getElementById('invMotL').classList.contains('on'),
+    inv_mot_r: document.getElementById('invMotR').classList.contains('on'),
+    inv_srv_l: document.getElementById('invSrvL').classList.contains('on'),
+    inv_srv_r: document.getElementById('invSrvR').classList.contains('on'),
+  };
+  try {
+    await apiCall('set_hw_invert', data);
+    showToast('硬件反向设置已保存');
+  } catch (e) {}
+}
+
+/* ──────────────────────────────────────────────────
+   舵机 Trim
+────────────────────────────────────────────────── */
+function onTrimInput(id) {
+  const val = parseInt(document.getElementById(id).value) / 10;
+  document.getElementById(id + 'Val').textContent = val.toFixed(1);
+  refreshServoLabels();
+}
+
+async function saveServoTrim() {
+  const l = parseInt(document.getElementById('trimL').value);
+  const r = parseInt(document.getElementById('trimR').value);
+  try {
+    await apiCall('set_servo_trim', { srv_trim_l_x10: l, srv_trim_r_x10: r });
+    showToast(`校准已保存：左 ${(l/10).toFixed(1)}°，右 ${(r/10).toFixed(1)}°`);
+    /* 立即用新偏移重发当前测试角度，便于观察校准效果 */
+    applyServoAngle(true);
+  } catch (e) {}
+}
+
+function resetServoTrim() {
+  document.getElementById('trimL').value          = 0;
+  document.getElementById('trimLVal').textContent = '0.0';
+  document.getElementById('trimR').value          = 0;
+  document.getElementById('trimRVal').textContent = '0.0';
+  refreshServoLabels();
+}
+
+/* ──────────────────────────────────────────────────
+   舵机测试
+────────────────────────────────────────────────── */
+/** 计算硬件实际输出角（与固件 app_servo.c 的 execute_move 保持一致） */
+function servoPhysical(side, logical) {
+  const trimId = side === 'L' ? 'trimL' : 'trimR';
+  const invId  = side === 'L' ? 'invSrvL' : 'invSrvR';
+
+  let a = logical + parseInt(document.getElementById(trimId).value) / 10;
+  if (a < 0) a = 0; else if (a > 180) a = 180;
+  if (side === 'R') a = 180 - a;                       /* 机械镜像 */
+  if (document.getElementById(invId).classList.contains('on')) a = 180 - a;
+  return a;
+}
+
+function refreshServoLabels() {
+  const l = parseInt(document.getElementById('srvL').value);
+  const r = parseInt(document.getElementById('srvR').value);
+
+  document.getElementById('srvLVal').textContent = l + '°';
+  document.getElementById('srvRVal').textContent = r + '°';
+  document.getElementById('srvLPhys').textContent =
+    '硬件输出角：' + servoPhysical('L', l).toFixed(1) + '°（含校准偏移）';
+  document.getElementById('srvRPhys').textContent =
+    '硬件输出角：' + servoPhysical('R', r).toFixed(1) + '°（含镜像 + 校准偏移）';
+}
+
+function onServoAngleInput(side) {
+  const sync = document.getElementById('srvSync').classList.contains('on');
+  if (sync) {
+    if (side === 'L') {
+      document.getElementById('srvR').value = document.getElementById('srvL').value;
+    } else {
+      document.getElementById('srvL').value = document.getElementById('srvR').value;
+    }
+  }
+  refreshServoLabels();
+}
+
+function servoPreset(deg) {
+  document.getElementById('srvL').value = deg;
+  document.getElementById('srvR').value = deg;
+  refreshServoLabels();
+  applyServoAngle();
+}
+
+/** 下发当前角度到双舵机；silent=true 时不弹提示（用于保存校准后的自动重发） */
+async function applyServoAngle(silent = false) {
+  const l = parseInt(document.getElementById('srvL').value);
+  const r = parseInt(document.getElementById('srvR').value);
+  try {
+    await apiCall('set_servo_angle', {
+      srv_angle_l_x10: l * 10,
+      srv_angle_r_x10: r * 10,
+      duration_ms: 300
+    });
+    if (!silent) showToast(`舵机已下发：左 ${l}°，右 ${r}°`);
+  } catch (e) {}
+}
+
+/* ──────────────────────────────────────────────────
+   麦克风增益
+────────────────────────────────────────────────── */
+async function saveMicGain() {
+  const gain_x10 = parseInt(document.getElementById('micGain').value);
+  try {
+    await apiCall('set_mic_gain', { mic_gain_x10: gain_x10 });
+    showToast(`麦克风增益已保存：${(gain_x10/10).toFixed(1)} dB`);
+  } catch (e) {}
+}
+
+function resetMicGain() {
+  document.getElementById('micGain').value         = 0;
+  document.getElementById('micGainVal').textContent = '0.0';
+}
+
+/* ──────────────────────────────────────────────────
+ ★ 触摸按键灵敏度
+────────────────────────────────────────────────── */
+
+/**
+ * 滑块实时回调：更新显示值
+ * @param {string|number} val  滑块当前整数值（即 ratio × 1000）
+ */
+function onTouchSensInput(val) {
+  document.getElementById('touchSensVal').textContent = (parseInt(val) / 10).toFixed(1);
+}
+
+/**
+ * 提交灵敏度到后端
+ * 传递 touch_sens_x1000（整数），与后端 json_get_int 对应
+ */
+async function saveTouchSensitivity() {
+  const val = parseInt(document.getElementById('touchSens').value);
+  try {
+    await apiCall('set_touch_sensitivity', { touch_sens_x1000: val });
+    showToast(`触摸灵敏度已更新：${(val / 10).toFixed(1)}%，正在重校准…`);
+  } catch (e) {}
+}
+
+/** 恢复默认值 0.7%（touch_sens_x1000 = 7） */
+function resetTouchSensitivity() {
+  const DEF = 7;
+  document.getElementById('touchSens').value        = DEF;
+  document.getElementById('touchSensVal').textContent = (DEF / 10).toFixed(1);
+  /* 不自动提交，让用户确认后再点「应用」 */
+  showToast('已重置为默认值 0.7%，请点击「应用灵敏度」生效', 'success');
+}
+
+/* ──────────────────────────────────────────────────
+   WiFi
+────────────────────────────────────────────────── */
+async function saveWifi() {
+  const ssid     = document.getElementById('wifiSsid').value.trim();
+  const password = document.getElementById('wifiPass').value;
+  if (!ssid) { showToast('请输入WiFi名称', 'error'); return; }
+  if (!confirm('确定要修改WiFi配置吗?\n设备将立即重启并尝试连接新网络。')) return;
+  try {
+    await apiCall('set_wifi', { ssid, password });
+    showToast('WiFi配置已保存，设备即将重启...');
+    setTimeout(() => window.location.href = '/', 3000);
+  } catch (e) {}
+}
+
+/* ──────────────────────────────────────────────────
+   出厂重置
+────────────────────────────────────────────────── */
+async function factoryReset() {
+  if (!confirm('⚠️ 警告：确定要恢复出厂设置吗？\n\n此操作不可逆，所有自定义配置都将被清除，且设备将立即重启！')) return;
+  try {
+    await apiCall('factory_reset');
+    showToast('已下发恢复出厂指令，设备即将重启...', 'success');
+    document.body.style.pointerEvents = 'none';
+    document.body.style.opacity       = '0.6';
+    setTimeout(() => window.location.href = '/', 3000);
+  } catch (e) {
+    showToast('操作失败', 'error');
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   启动
+────────────────────────────────────────────────── */
+loadConfig();
+</script>
+</body>
+</html>

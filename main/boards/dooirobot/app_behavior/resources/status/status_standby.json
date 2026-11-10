@@ -1,0 +1,16 @@
+{
+  "scene_name": "status_standby",
+  "description": "唤醒/触摸生命待机状态",
+  "config": {
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "timeline": [
+        { "time_ms": 0, "channel": "servo", "repeat": 1, "asset": "pose_default_135.json" },
+        { "time_ms": 0, "channel": "led",   "repeat": 1, "asset": "off.json" }
+      ]
+    }
+  ]
+}

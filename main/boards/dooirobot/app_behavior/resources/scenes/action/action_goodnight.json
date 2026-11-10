@@ -1,0 +1,65 @@
+﻿{
+  "scene_name": "action_goodnight",
+  "description": "晚安入睡：笑眼→揉右眼皮→看下方+眼下垂→灯光渐暗→停在65度（低优先级，可中断，不复位）",
+  "priority": "low",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "sweet_dreams",
+      "weight": 100,
+      "description": "入睡流程：先笑→琥珀灯+右臂揉困→看下方+眼下垂+暗琥珀→深夜蓝呼吸+双臂慢慢下垂停在65度（不复位）",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_amber.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "goodnight_sleep.json"
+        },
+        {
+          "time_ms": 2000,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "focus_below_center.json"
+        },
+        {
+          "time_ms": 2000,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_dark_amber.json"
+        },
+        {
+          "time_ms": 4100,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_deep_night.json"
+        },
+        {
+          "time_ms": 7600,
+          "type": "led",
+          "repeat": 2,
+          "asset": "breath_nightblue_3000ms.json"
+        }
+      ]
+    }
+  ]
+}

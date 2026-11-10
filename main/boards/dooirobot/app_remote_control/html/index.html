@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>DooiRobot Control</title>
+<style>
+:root {
+  --bg0:#0d1117; --bg1:#161b22; --bg2:#21262d; --bg3:#30363d;
+  --tx0:#e6edf3; --tx1:#8b949e; --tx2:#484f58;
+  --ac:#58a6ff; --ac2:#1f6feb;
+  --ok:#3fb950; --warn:#d29922; --err:#f85149;
+  --radius:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg0);color:var(--tx0);overflow-x:hidden;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation}
+header{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:var(--bg1);border-bottom:1px solid var(--bg3)}
+header h1{font-size:18px;font-weight:600}
+#status{font-size:13px;padding:4px 10px;border-radius:12px;background:var(--bg2)}
+#status.on{color:var(--ok)}
+#status.off{color:var(--err)}
+
+.top-row{display:flex;gap:12px;padding:12px;flex-wrap:wrap;justify-content:center}
+.cam-box{position:relative;background:#000;border-radius:var(--radius);
+  overflow:hidden;width:240px;height:240px;flex-shrink:0;border:1px solid var(--bg3)}
+.cam-box img{width:100%;height:100%;object-fit:contain;display:block}
+.cam-overlay{position:absolute;top:6px;right:6px;display:flex;gap:4px}
+.cam-overlay button{background:rgba(0,0,0,.6);border:none;color:#fff;
+  font-size:16px;width:32px;height:32px;border-radius:6px;cursor:pointer}
+.cam-overlay button:active{background:rgba(88,166,255,.5)}
+.cam-label{position:absolute;bottom:0;left:0;right:0;text-align:center;
+  font-size:11px;color:var(--tx1);background:rgba(0,0,0,.5);padding:2px}
+
+.joy-box{display:flex;flex-direction:column;align-items:center;gap:8px}
+.joy-box canvas{border-radius:50%;cursor:pointer}
+.joy-info{display:flex;gap:16px;font-size:13px;color:var(--tx1);font-family:monospace}
+.btn-stop{background:var(--err);color:#fff;border:none;padding:8px 24px;
+  border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;
+  letter-spacing:1px}
+.btn-stop:active{opacity:.7}
+
+nav.tabs{display:flex;gap:2px;padding:0 12px;background:var(--bg1);
+  border-top:1px solid var(--bg3);border-bottom:1px solid var(--bg3);
+  overflow-x:auto;-webkit-overflow-scrolling:touch}
+nav.tabs button{flex:1;min-width:60px;padding:10px 4px;background:none;
+  border:none;color:var(--tx1);font-size:13px;cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:.2s}
+nav.tabs button.active{color:var(--ac);border-bottom-color:var(--ac)}
+
+.tab-content{display:none;padding:12px;animation:fadeIn .2s}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.panel{background:var(--bg1);border:1px solid var(--bg3);border-radius:var(--radius);
+  padding:12px;margin-bottom:10px}
+.panel-title{font-size:13px;color:var(--tx1);margin-bottom:8px;font-weight:600}
+
+.btn-grid{display:flex;flex-wrap:wrap;gap:6px}
+.btn-grid button{padding:8px 12px;background:var(--bg2);border:1px solid var(--bg3);
+  color:var(--tx0);border-radius:8px;font-size:14px;cursor:pointer;
+  transition:all .15s;min-width:44px;text-align:center}
+.btn-grid button:hover{border-color:var(--ac);background:var(--ac2)}
+.btn-grid button:active{transform:scale(.93)}
+
+.ctrl-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.ctrl-row label{font-size:13px;color:var(--tx1);min-width:60px}
+.ctrl-row input[type=range]{flex:1;min-width:100px;accent-color:var(--ac)}
+.ctrl-row input[type=number]{width:70px;padding:6px;background:var(--bg2);
+  border:1px solid var(--bg3);color:var(--tx0);border-radius:6px;font-size:13px}
+.ctrl-row input[type=color]{width:44px;height:32px;border:1px solid var(--bg3);
+  border-radius:6px;background:var(--bg2);cursor:pointer;padding:2px}
+.ctrl-row .val{font-size:13px;color:var(--ac);min-width:40px;text-align:right;
+  font-family:monospace}
+.ctrl-row select{padding:6px;background:var(--bg2);border:1px solid var(--bg3);
+  color:var(--tx0);border-radius:6px;font-size:13px}
+
+.btn-primary{padding:8px 20px;background:var(--ac2);border:1px solid var(--ac);
+  color:#fff;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500}
+.btn-primary:active{opacity:.7}
+.btn-warn{padding:8px 20px;background:#6e3a00;border:1px solid var(--warn);
+  color:var(--warn);border-radius:8px;font-size:14px;cursor:pointer}
+
+/* ---- 传感器面板专用样式 ---- */
+.sensor-toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sensor-toggle-row label{font-size:14px;color:var(--tx0);font-weight:500}
+
+/* 开关 toggle */
+.toggle{position:relative;width:46px;height:26px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg3);border-radius:13px;
+  cursor:pointer;transition:.25s}
+.toggle-slider:before{content:'';position:absolute;width:20px;height:20px;
+  left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s}
+.toggle input:checked + .toggle-slider{background:var(--ac2)}
+.toggle input:checked + .toggle-slider:before{transform:translateX(20px)}
+
+/* IR 传感器卡片 */
+.ir-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.ir-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:8px;
+  padding:10px 6px;text-align:center;transition:border-color .2s,background .2s}
+.ir-card.active{border-color:var(--ok);background:#0d2218}
+.ir-card-label{font-size:11px;color:var(--tx1);margin-bottom:6px}
+.ir-card-count{font-size:22px;font-weight:700;font-family:monospace;color:var(--ac)}
+.ir-card.active .ir-card-count{color:var(--ok)}
+
+/* IMU 数据表格 */
+.imu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.imu-cell{background:var(--bg2);border:1px solid var(--bg3);border-radius:8px;padding:10px 8px}
+.imu-cell-label{font-size:11px;color:var(--tx1);margin-bottom:4px}
+.imu-cell-val{font-size:16px;font-weight:600;font-family:monospace;color:var(--ac)}
+.imu-cell-unit{font-size:10px;color:var(--tx2);margin-top:2px}
+
+/* IMU 可视化条 */
+.imu-bar-wrap{height:4px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden}
+.imu-bar{height:100%;border-radius:2px;background:var(--ac);transition:width .1s;width:50%}
+
+/* ---- 触摸计数面板样式 ---- */
+.touch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
+.touch-key-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:10px;
+  padding:14px 12px;text-align:center;transition:border-color .3s,box-shadow .3s}
+.touch-key-card.pulse{border-color:var(--ac);box-shadow:0 0 12px rgba(88,166,255,.3)}
+.touch-key-title{font-size:14px;font-weight:600;color:var(--tx0);margin-bottom:10px}
+.touch-total{font-size:32px;font-weight:700;font-family:monospace;color:var(--ac);margin-bottom:8px}
+.touch-detail{display:flex;justify-content:space-around;gap:4px}
+.touch-detail-item{text-align:center}
+.touch-detail-label{font-size:10px;color:var(--tx2);margin-bottom:2px}
+.touch-detail-val{font-size:14px;font-weight:600;font-family:monospace;color:var(--tx0)}
+
+@media(max-width:700px){
+  .top-row{flex-direction:column;align-items:center}
+  .cam-box{width:100%;max-width:240px;height:auto;aspect-ratio:1/1}
+  .ir-grid{grid-template-columns:repeat(2,1fr)}
+  .imu-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🤖 DooiRobot</h1>
+  <div style="display:flex;gap:8px;align-items:center">
+    <a href="/behavior" style="color:var(--ac);text-decoration:none;font-size:13px">🧩 行为编辑</a>
+    <a href="/studio" style="color:var(--ac);text-decoration:none;font-size:13px">👁️ 眼睛工作室</a>
+    <a href="/settings" style="color:var(--ac);text-decoration:none;font-size:13px">⚙️ 设置</a>
+    <div id="status" class="off">● 未连接</div>
+  </div>
+</header>
+
+<!-- ========== 顶部: 摄像头 + 摇杆 ========== -->
+<div class="top-row">
+  <div class="cam-box">
+    <img id="camView" alt="Camera" src="">
+    <div class="cam-overlay">
+      <button onclick="toggleCam()" id="btnCam" title="开关摄像头">📷</button>
+      <button onclick="snapShot()" title="截图">📸</button>
+    </div>
+    <div class="cam-label" id="camLabel">摄像头未开启</div>
+  </div>
+  <div class="joy-box">
+    <canvas id="joystick" width="200" height="200"></canvas>
+    <div class="joy-info">
+      <span>油门: <span id="vT">0.00</span></span>
+      <span>转向: <span id="vS">0.00</span></span>
+    </div>
+    <button class="btn-stop" onclick="eStop()">🛑 紧急停止</button>
+  </div>
+</div>
+
+<!-- ========== Tab 导航 ========== -->
+<nav class="tabs" id="tabNav">
+  <button class="active" data-t="pLed">💡 灯光</button>
+  <button data-t="pServo">⚙️ 舵机</button>
+  <button data-t="pMotor">🚗 电机</button>
+  <button data-t="pDisplay">📺 显示</button>
+  <button data-t="pSensor">📡 传感器</button>
+</nav>
+
+<!-- ========== Tab: 灯光 ========== -->
+<div class="tab-content active" id="pLed">
+  <div class="panel">
+    <div class="panel-title">🎨 RGB 固定颜色</div>
+    <div class="ctrl-row">
+      <label>左手</label>
+      <input type="color" id="ledL" value="#ff6600">
+      <label>右手</label>
+      <input type="color" id="ledR" value="#0066ff">
+      <button class="btn-primary" onclick="sendLedRgb()">设置</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">✨ 灯光特效</div>
+    <div class="ctrl-row">
+      <label>类型</label>
+      <select id="ledFx">
+        <option value="0">🫧 呼吸</option>
+        <option value="1">🌈 彩虹</option>
+        <option value="2">⚡ 闪烁</option>
+      </select>
+    </div>
+    <div class="ctrl-row">
+      <label>颜色</label>
+      <input type="color" id="ledFxColor" value="#ff0088">
+      <label>周期</label>
+      <input type="number" id="ledFxPeriod" value="2000" min="100" max="10000" step="100">
+      <span style="font-size:12px;color:var(--tx1)">ms</span>
+    </div>
+    <div class="ctrl-row">
+      <label>对称</label>
+      <select id="ledFxSym">
+        <option value="1">是</option>
+        <option value="0">否</option>
+      </select>
+      <button class="btn-primary" onclick="sendLedEffect()">应用</button>
+    </div>
+  </div>
+  <div class="panel" style="text-align:center">
+    <button class="btn-warn" onclick="sendLedOff()">🔌 关闭 LED</button>
+  </div>
+</div>
+
+<!-- ========== Tab: 舵机 ========== -->
+<div class="tab-content" id="pServo">
+  <div class="panel">
+    <div class="panel-title">⚙️ 舵机角度控制</div>
+    <div class="ctrl-row">
+      <label>目标</label>
+      <select id="svTarget">
+        <option value="0">左舵机</option>
+        <option value="1">右舵机</option>
+        <option value="2">双舵机</option>
+      </select>
+    </div>
+    <div class="ctrl-row">
+      <label>角度</label>
+      <input type="range" id="svAngle" min="0" max="180" value="90">
+      <span class="val" id="svAngleVal">90°</span>
+    </div>
+    <div class="ctrl-row">
+      <label>时间</label>
+      <input type="number" id="svDur" value="500" min="0" max="5000" step="50">
+      <span style="font-size:12px;color:var(--tx1)">ms</span>
+      <button class="btn-primary" onclick="sendServo()">执行</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Tab: 电机 ========== -->
+<div class="tab-content" id="pMotor">
+  <div class="panel">
+    <div class="panel-title">🚗 定时驱动</div>
+    <div class="ctrl-row">
+      <label>左轮</label>
+      <input type="range" id="mtL" min="-100" max="100" value="0">
+      <span class="val" id="mtLVal">0</span>
+    </div>
+    <div class="ctrl-row">
+      <label>右轮</label>
+      <input type="range" id="mtR" min="-100" max="100" value="0">
+      <span class="val" id="mtRVal">0</span>
+    </div>
+    <div class="ctrl-row">
+      <label>时间</label>
+      <input type="number" id="mtDur" value="1000" min="0" max="10000" step="100">
+      <span style="font-size:12px;color:var(--tx1)">ms</span>
+      <button class="btn-primary" onclick="sendMotorAuto()">执行</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Tab: 显示 ========== -->
+<div class="tab-content" id="pDisplay">
+  <div class="panel">
+    <div class="panel-title">📺 屏幕页面切换</div>
+    <div class="btn-grid">
+      <button onclick="sendScreen(1)">⏱️ 时钟</button>
+      <button onclick="sendScreen(2)">🎬 NULL</button>
+      <button onclick="sendScreen(3)">🎵 频谱</button>
+      <button onclick="sendScreen(4)">👀 眼睛</button>
+      <button onclick="sendScreen(5)">📷 摄像头</button>
+      <button onclick="sendScreen(6)">🐱 招财猫</button>
+      <button onclick="sendScreen(7)">📊 状态信息</button>
+      <button onclick="sendScreen(8)">🔲 页面选择</button>
+      <button onclick="sendScreen(9)">✨ 唤醒确认</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">👁️ 屏幕眼睛表情</div>
+    <div class="btn-grid">
+      <button onclick="sendEyeEmotion(0)">😐 默认</button>
+      <button onclick="sendEyeEmotion(1)">⬇️ 看下</button>
+      <button onclick="sendEyeEmotion(2)">⬆️ 看上</button>
+      <button onclick="sendEyeEmotion(3)">↖️ 看左上</button>
+      <button onclick="sendEyeEmotion(4)">↗️ 看右上</button>
+      <button onclick="sendEyeEmotion(5)">⬅️ 看左</button>
+      <button onclick="sendEyeEmotion(6)">➡️ 看右</button>
+      <button onclick="sendEyeEmotion(7)">😊 开心</button>
+      <button onclick="sendEyeEmotion(8)">😊 开心1</button>
+      <button onclick="sendEyeEmotion(9)">😊 开心2</button>
+      <button onclick="sendEyeEmotion(10)">😠 生气</button>
+      <button onclick="sendEyeEmotion(11)">😠 生气1</button>
+      <button onclick="sendEyeEmotion(12)">😠 气(看右)</button>
+      <button onclick="sendEyeEmotion(13)">😠 气(看左)</button>
+      <button onclick="sendEyeEmotion(14)">😢 伤心</button>
+      <button onclick="sendEyeEmotion(15)">😒 怀疑</button>
+      <button onclick="sendEyeEmotion(16)">😲 惊讶</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">🔮 虹膜纹理</div>
+    <div class="btn-grid">
+      <button onclick="sendEyeIris(0)">🟤 默认</button>
+      <button onclick="sendEyeIris(1)">🟢 翡翠绿</button>
+      <button onclick="sendEyeIris(2)">🟣 紫色</button>
+      <button onclick="sendEyeIris(3)">🔵 蓝色</button>
+      <button onclick="sendEyeIris(4)">🟡 黄色</button>
+      <button onclick="sendEyeIris(5)">⚪ 灰色</button>
+      <button onclick="sendEyeIris(6)">🟠 橙色</button>
+      <button onclick="sendEyeIris(7)">🍷 酒红色</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Tab: 传感器 ========== -->
+<div class="tab-content" id="pSensor">
+
+  <!-- 触摸计数 -->
+  <div class="panel">
+    <div class="panel-title">👆 触摸按键计数</div>
+    <div class="sensor-toggle-row">
+      <label class="toggle">
+        <input type="checkbox" id="touchSwitch" onchange="onTouchToggle(this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+      <label for="touchSwitch" style="cursor:pointer">开启实时读取</label>
+      <span id="touchStatus" style="font-size:12px;color:var(--tx2);margin-left:auto"></span>
+      <button class="btn-warn" onclick="sendTouchReset()" style="padding:4px 12px;font-size:12px;margin-left:8px">🔄 清零</button>
+    </div>
+    <div class="touch-grid">
+      <!-- 左键 -->
+      <div class="touch-key-card" id="touchCardL">
+        <div class="touch-key-title">⬅️ 左键 (GPIO7)</div>
+        <div class="touch-total" id="touchTotalL">0</div>
+        <div class="touch-detail">
+          <div class="touch-detail-item">
+            <div class="touch-detail-label">单击</div>
+            <div class="touch-detail-val" id="touchClickL">0</div>
+          </div>
+          <div class="touch-detail-item">
+            <div class="touch-detail-label">双击</div>
+            <div class="touch-detail-val" id="touchDblL">0</div>
+          </div>
+          <div class="touch-detail-item">
+            <div class="touch-detail-label">长按</div>
+            <div class="touch-detail-val" id="touchLongL">0</div>
+          </div>
+        </div>
+      </div>
+      <!-- 右键 -->
+      <div class="touch-key-card" id="touchCardR">
+        <div class="touch-key-title">➡️ 右键 (GPIO8)</div>
+        <div class="touch-total" id="touchTotalR">0</div>
+        <div class="touch-detail">
+          <div class="touch-detail-item">
+            <div class="touch-detail-label">单击</div>
+            <div class="touch-detail-val" id="touchClickR">0</div>
+          </div>
+          <div class="touch-detail-item">
+            <div class="touch-detail-label">双击</div>
+            <div class="touch-detail-val" id="touchDblR">0</div>
+          </div>
+          <div class="touch-detail-item">
+            <div class="touch-detail-label">长按</div>
+            <div class="touch-detail-val" id="touchLongR">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IR 红外 -->
+  <div class="panel">
+    <div class="panel-title">🔴 IR 红外触发计数</div>
+    <div class="sensor-toggle-row">
+      <label class="toggle">
+        <input type="checkbox" id="irSwitch" onchange="onIrToggle(this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+      <label for="irSwitch" style="cursor:pointer">开启实时读取</label>
+      <span id="irStatus" style="font-size:12px;color:var(--tx2);margin-left:auto"></span>
+    </div>
+    <div class="ir-grid">
+      <div class="ir-card" id="irCard0">
+        <div class="ir-card-label">IR 1</div>
+        <div class="ir-card-count" id="irCount0">—</div>
+      </div>
+      <div class="ir-card" id="irCard1">
+        <div class="ir-card-label">IR 2</div>
+        <div class="ir-card-count" id="irCount1">—</div>
+      </div>
+      <div class="ir-card" id="irCard2">
+        <div class="ir-card-label">IR 3</div>
+        <div class="ir-card-count" id="irCount2">—</div>
+      </div>
+      <div class="ir-card" id="irCard3">
+        <div class="ir-card-label">IR 4</div>
+        <div class="ir-card-count" id="irCount3">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMU -->
+  <div class="panel">
+    <div class="panel-title">📐 IMU 惯性数据</div>
+    <div class="sensor-toggle-row">
+      <label class="toggle">
+        <input type="checkbox" id="imuSwitch" onchange="onImuToggle(this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+      <label for="imuSwitch" style="cursor:pointer">开启实时读取(对话时无法更新数据)</label>
+      <span id="imuStatus" style="font-size:12px;color:var(--tx2);margin-left:auto"></span>
+    </div>
+
+    <!-- 加速度 -->
+    <div style="font-size:11px;color:var(--tx1);margin:8px 0 4px">加速度 (g)</div>
+    <div class="imu-grid">
+      <div class="imu-cell">
+        <div class="imu-cell-label">AX</div>
+        <div class="imu-cell-val" id="imuAx">—</div>
+        <div class="imu-cell-unit">g</div>
+        <div class="imu-bar-wrap"><div class="imu-bar" id="barAx"></div></div>
+      </div>
+      <div class="imu-cell">
+        <div class="imu-cell-label">AY</div>
+        <div class="imu-cell-val" id="imuAy">—</div>
+        <div class="imu-cell-unit">g</div>
+        <div class="imu-bar-wrap"><div class="imu-bar" id="barAy"></div></div>
+      </div>
+      <div class="imu-cell">
+        <div class="imu-cell-label">AZ</div>
+        <div class="imu-cell-val" id="imuAz">—</div>
+        <div class="imu-cell-unit">g</div>
+        <div class="imu-bar-wrap"><div class="imu-bar" id="barAz"></div></div>
+      </div>
+    </div>
+
+    <!-- 角速度 -->
+    <div style="font-size:11px;color:var(--tx1);margin:10px 0 4px">角速度 (dps)</div>
+    <div class="imu-grid">
+      <div class="imu-cell">
+        <div class="imu-cell-label">GX</div>
+        <div class="imu-cell-val" id="imuGx">—</div>
+        <div class="imu-cell-unit">dps</div>
+        <div class="imu-bar-wrap"><div class="imu-bar" id="barGx"></div></div>
+      </div>
+      <div class="imu-cell">
+        <div class="imu-cell-label">GY</div>
+        <div class="imu-cell-val" id="imuGy">—</div>
+        <div class="imu-cell-unit">dps</div>
+        <div class="imu-bar-wrap"><div class="imu-bar" id="barGy"></div></div>
+      </div>
+      <div class="imu-cell">
+        <div class="imu-cell-label">GZ</div>
+        <div class="imu-cell-val" id="imuGz">—</div>
+        <div class="imu-cell-unit">dps</div>
+        <div class="imu-bar-wrap"><div class="imu-bar" id="barGz"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pSensor -->
+
+<script>
+/* ================================================================
+ *  全局状态
+ * ================================================================ */
+let ws = null;
+let wsReady = false;
+let camOn = false;
+
+/* 传感器轮询定时器 */
+let irPollTimer    = null;
+let imuPollTimer   = null;
+let touchPollTimer = null;
+
+/* 上一次各IR计数，用于判断是否有新触发 */
+const irPrevCounts = [0, 0, 0, 0];
+
+/* 上一次触摸总计数，用于高亮动画 */
+const touchPrevTotal = [0, 0];
+
+/* 指令 ID 常量 (与 remote_protocol.h 一致) */
+const CMD = {
+  HEARTBEAT:   0x00,
+  JOYSTICK:    0x01,
+  MOTOR_AUTO:  0x02,
+  LED_RGB:     0x04,
+  LED_EFFECT:  0x05,
+  LED_OFF:     0x06,
+  SERVO:       0x07,
+  SCREEN:      0x08,
+  EYE_EMOTION: 0x09,
+  EYE_IRIS:    0x0A,
+  IR_GET:      0x0B,
+  IMU_GET:     0x0C,
+  TOUCH_GET:   0x0D,
+  TOUCH_RESET: 0x0E,
+};
+
+/* 数据应答标记 */
+const DATA_MARKER = 0xFE;
+const RSP_MARKER  = 0xFF;
+
+/* ================================================================
+ *  Tab 切换
+ * ================================================================ */
+document.querySelectorAll('#tabNav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#tabNav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.t).classList.add('active');
+  });
+});
+
+/* ================================================================
+ *  滑块实时数值显示
+ * ================================================================ */
+document.getElementById('svAngle').addEventListener('input', e => {
+  document.getElementById('svAngleVal').textContent = e.target.value + '°';
+});
+document.getElementById('mtL').addEventListener('input', e => {
+  document.getElementById('mtLVal').textContent = e.target.value;
+});
+document.getElementById('mtR').addEventListener('input', e => {
+  document.getElementById('mtRVal').textContent = e.target.value;
+});
+
+/* ================================================================
+ *  WebSocket 连接管理
+ * ================================================================ */
+const statusEl = document.getElementById('status');
+
+function wsConnect() {
+  const host = window.location.hostname || '192.168.4.1';
+  ws = new WebSocket(`ws://${host}/ws`);
+  ws.binaryType = 'arraybuffer';
+
+  ws.onopen = () => {
+    wsReady = true;
+    statusEl.textContent = '● 已连接';
+    statusEl.className = 'on';
+    if (window._hbTimer) clearInterval(window._hbTimer);
+    window._hbTimer = setInterval(() => {
+      if (wsReady) sendRaw(new Uint8Array([CMD.HEARTBEAT]));
+    }, 5000);
+  };
+
+  ws.onclose = () => {
+    wsReady = false;
+    statusEl.textContent = '● 已断开';
+    statusEl.className = 'off';
+    if (window._hbTimer) clearInterval(window._hbTimer);
+    setTimeout(wsConnect, 2000);
+  };
+
+  ws.onerror = () => { ws.close(); };
+
+  ws.onmessage = (evt) => {
+    if (!(evt.data instanceof ArrayBuffer)) return;
+    const d   = new Uint8Array(evt.data);
+    if (d.length < 2) return;
+
+    const marker = d[0];
+    const cmdId  = d[1];
+
+    if (marker === DATA_MARKER) {
+      /* ---- 数据应答包 ---- */
+      if (cmdId === CMD.IR_GET && d.length >= 6) {
+        updateIrDisplay(d[2], d[3], d[4], d[5]);
+      } else if (cmdId === CMD.IMU_GET && d.length >= 26) {
+        const dv = new DataView(evt.data, 2);
+        updateImuDisplay(
+          dv.getFloat32(0,  true),
+          dv.getFloat32(4,  true),
+          dv.getFloat32(8,  true),
+          dv.getFloat32(12, true),
+          dv.getFloat32(16, true),
+          dv.getFloat32(20, true)
+        );
+      } else if (cmdId === CMD.TOUCH_GET && d.length >= 34) {
+        /* [0xFE][0x0D][click_L u32][click_R u32][dbl_L u32][dbl_R u32]
+                       [long_L u32][long_R u32][total_L u32][total_R u32] */
+        const dv = new DataView(evt.data, 2); // skip marker + cmd_id
+        updateTouchDisplay(
+          dv.getUint32(0,  true),  // click_L
+          dv.getUint32(4,  true),  // click_R
+          dv.getUint32(8,  true),  // dbl_L
+          dv.getUint32(12, true),  // dbl_R
+          dv.getUint32(16, true),  // long_L
+          dv.getUint32(20, true),  // long_R
+          dv.getUint32(24, true),  // total_L
+          dv.getUint32(28, true)   // total_R
+        );
+      }
+    } else if (marker === RSP_MARKER && d.length >= 3) {
+      /* ---- 控制指令状态应答 ---- */
+      const ok = d[2] === 0;
+      if (!ok) console.warn(`Cmd 0x${d[1].toString(16)} failed, status=${d[2]}`);
+    }
+  };
+}
+
+document.querySelector('a[href="/settings"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (ws) {
+        ws.onclose = null;
+        ws.close();
+    }
+    window.location.href = '/settings';
+});
+
+document.querySelector('a[href="/studio"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (ws) {
+        ws.onclose = null;
+        ws.close();
+    }
+    window.location.href = '/studio';
+});
+
+function sendRaw(uint8arr) {
+  if (ws && wsReady) {
+    ws.send(uint8arr.buffer);
+  }
+}
+
+/* ================================================================
+ *  二进制打包辅助
+ * ================================================================ */
+function packFloat(f) {
+  const buf = new ArrayBuffer(4);
+  new DataView(buf).setFloat32(0, f, true);
+  return new Uint8Array(buf);
+}
+function packInt16(v) {
+  const buf = new ArrayBuffer(2);
+  new DataView(buf).setInt16(0, v, true);
+  return new Uint8Array(buf);
+}
+function packUint16(v) {
+  const buf = new ArrayBuffer(2);
+  new DataView(buf).setUint16(0, v, true);
+  return new Uint8Array(buf);
+}
+function packUint32(v) {
+  const buf = new ArrayBuffer(4);
+  new DataView(buf).setUint32(0, v, true);
+  return new Uint8Array(buf);
+}
+function colorHexToU32(hex) {
+  return parseInt(hex.replace('#', ''), 16);
+}
+function concatBytes() {
+  let total = 0;
+  for (let i = 0; i < arguments.length; i++) total += arguments[i].length;
+  const out = new Uint8Array(total);
+  let off = 0;
+  for (let i = 0; i < arguments.length; i++) {
+    out.set(arguments[i], off);
+    off += arguments[i].length;
+  }
+  return out;
+}
+
+/* ================================================================
+ *  指令发送函数
+ * ================================================================ */
+function sendJoystick(throttle, steering) {
+  sendRaw(concatBytes(
+    new Uint8Array([CMD.JOYSTICK]),
+    packFloat(throttle),
+    packFloat(steering)
+  ));
+}
+function eStop() { sendJoystick(0, 0); }
+
+function sendLedRgb() {
+  const l = colorHexToU32(document.getElementById('ledL').value);
+  const r = colorHexToU32(document.getElementById('ledR').value);
+  sendRaw(concatBytes(new Uint8Array([CMD.LED_RGB]), packUint32(l), packUint32(r)));
+}
+
+function sendLedEffect() {
+  const fx     = parseInt(document.getElementById('ledFx').value);
+  const color  = colorHexToU32(document.getElementById('ledFxColor').value);
+  const period = parseInt(document.getElementById('ledFxPeriod').value);
+  const sym    = parseInt(document.getElementById('ledFxSym').value);
+  sendRaw(concatBytes(
+    new Uint8Array([CMD.LED_EFFECT, fx]),
+    packUint32(color),
+    packUint16(period),
+    new Uint8Array([sym])
+  ));
+}
+
+function sendLedOff() { sendRaw(new Uint8Array([CMD.LED_OFF])); }
+
+function sendServo() {
+  const target = parseInt(document.getElementById('svTarget').value);
+  const angle  = parseFloat(document.getElementById('svAngle').value);
+  const dur    = parseInt(document.getElementById('svDur').value);
+  sendRaw(concatBytes(
+    new Uint8Array([CMD.SERVO, target]),
+    packFloat(angle),
+    packUint32(dur)
+  ));
+}
+
+function sendMotorAuto() {
+  const l   = parseInt(document.getElementById('mtL').value);
+  const r   = parseInt(document.getElementById('mtR').value);
+  const dur = parseInt(document.getElementById('mtDur').value);
+  sendRaw(concatBytes(
+    new Uint8Array([CMD.MOTOR_AUTO]),
+    packInt16(l),
+    packInt16(r),
+    packUint16(dur)
+  ));
+}
+
+function sendScreen(type)    { sendRaw(new Uint8Array([CMD.SCREEN, type])); }
+function sendEyeEmotion(emo) { sendRaw(new Uint8Array([CMD.EYE_EMOTION, emo])); }
+function sendEyeIris(iris)   { sendRaw(new Uint8Array([CMD.EYE_IRIS, iris])); }
+
+/* ================================================================
+ *  触摸计数 — 轮询控制
+ * ================================================================ */
+function onTouchToggle(on) {
+  const statusEl = document.getElementById('touchStatus');
+  if (on) {
+    statusEl.textContent = '读取中…';
+    statusEl.style.color = 'var(--ok)';
+    sendRaw(new Uint8Array([CMD.TOUCH_GET]));
+    touchPollTimer = setInterval(() => {
+      if (wsReady) sendRaw(new Uint8Array([CMD.TOUCH_GET]));
+    }, 300);
+  } else {
+    if (touchPollTimer) { clearInterval(touchPollTimer); touchPollTimer = null; }
+    statusEl.textContent = '已停止';
+    statusEl.style.color = 'var(--tx2)';
+  }
+}
+
+function sendTouchReset() {
+  sendRaw(new Uint8Array([CMD.TOUCH_RESET]));
+  /* 立即清零显示 */
+  document.getElementById('touchTotalL').textContent = '0';
+  document.getElementById('touchTotalR').textContent = '0';
+  document.getElementById('touchClickL').textContent = '0';
+  document.getElementById('touchClickR').textContent = '0';
+  document.getElementById('touchDblL').textContent   = '0';
+  document.getElementById('touchDblR').textContent   = '0';
+  document.getElementById('touchLongL').textContent  = '0';
+  document.getElementById('touchLongR').textContent  = '0';
+  touchPrevTotal[0] = 0;
+  touchPrevTotal[1] = 0;
+}
+
+function updateTouchDisplay(clickL, clickR, dblL, dblR, longL, longR, totalL, totalR) {
+  document.getElementById('touchClickL').textContent = clickL;
+  document.getElementById('touchClickR').textContent = clickR;
+  document.getElementById('touchDblL').textContent   = dblL;
+  document.getElementById('touchDblR').textContent   = dblR;
+  document.getElementById('touchLongL').textContent  = longL;
+  document.getElementById('touchLongR').textContent  = longR;
+  document.getElementById('touchTotalL').textContent = totalL;
+  document.getElementById('touchTotalR').textContent = totalR;
+
+  /* 计数变化时短暂高亮卡片 */
+  if (totalL !== touchPrevTotal[0]) {
+    const card = document.getElementById('touchCardL');
+    card.classList.add('pulse');
+    setTimeout(() => card.classList.remove('pulse'), 400);
+    touchPrevTotal[0] = totalL;
+  }
+  if (totalR !== touchPrevTotal[1]) {
+    const card = document.getElementById('touchCardR');
+    card.classList.add('pulse');
+    setTimeout(() => card.classList.remove('pulse'), 400);
+    touchPrevTotal[1] = totalR;
+  }
+}
+
+/* ================================================================
+ *  IR 红外 — 轮询控制
+ * ================================================================ */
+function onIrToggle(on) {
+  const statusEl = document.getElementById('irStatus');
+  if (on) {
+    statusEl.textContent = '读取中…';
+    statusEl.style.color = 'var(--ok)';
+    sendRaw(new Uint8Array([CMD.IR_GET]));
+    irPollTimer = setInterval(() => {
+      if (wsReady) sendRaw(new Uint8Array([CMD.IR_GET]));
+    }, 200);
+  } else {
+    if (irPollTimer) { clearInterval(irPollTimer); irPollTimer = null; }
+    statusEl.textContent = '已停止';
+    statusEl.style.color = 'var(--tx2)';
+    for (let i = 0; i < 4; i++) {
+      document.getElementById('irCount' + i).textContent = '—';
+      document.getElementById('irCard'  + i).classList.remove('active');
+    }
+  }
+}
+
+function updateIrDisplay(c0, c1, c2, c3) {
+  const counts = [c0, c1, c2, c3];
+  for (let i = 0; i < 4; i++) {
+    const el   = document.getElementById('irCount' + i);
+    const card = document.getElementById('irCard'  + i);
+    el.textContent = counts[i];
+    if (counts[i] !== irPrevCounts[i]) {
+      card.classList.add('active');
+      irPrevCounts[i] = counts[i];
+      setTimeout(() => card.classList.remove('active'), 500);
+    }
+  }
+}
+
+/* ================================================================
+ *  IMU — 轮询控制
+ * ================================================================ */
+function onImuToggle(on) {
+  const statusEl = document.getElementById('imuStatus');
+  if (on) {
+    statusEl.textContent = '读取中…';
+    statusEl.style.color = 'var(--ok)';
+    sendRaw(new Uint8Array([CMD.IMU_GET]));
+    imuPollTimer = setInterval(() => {
+      if (wsReady) sendRaw(new Uint8Array([CMD.IMU_GET]));
+    }, 200);
+  } else {
+    if (imuPollTimer) { clearInterval(imuPollTimer); imuPollTimer = null; }
+    statusEl.textContent = '已停止';
+    statusEl.style.color = 'var(--tx2)';
+    const fields = ['Ax','Ay','Az','Gx','Gy','Gz'];
+    fields.forEach(f => {
+      document.getElementById('imu' + f).textContent = '—';
+      document.getElementById('bar' + f).style.width = '50%';
+    });
+  }
+}
+
+function imuToBarWidth(v, max) {
+  const ratio = Math.min(Math.max(v / max, -1), 1);
+  return ((ratio + 1) / 2 * 100).toFixed(1) + '%';
+}
+
+function updateImuDisplay(ax, ay, az, gx, gy, gz) {
+  const accelMax = 2;
+  const gyroMax  = 250;
+
+  const accel = { Ax: ax, Ay: ay, Az: az };
+  const gyro  = { Gx: gx, Gy: gy, Gz: gz };
+
+  Object.entries(accel).forEach(([k, v]) => {
+    document.getElementById('imu' + k).textContent = v.toFixed(3);
+    document.getElementById('bar' + k).style.width = imuToBarWidth(v, accelMax);
+  });
+  Object.entries(gyro).forEach(([k, v]) => {
+    document.getElementById('imu' + k).textContent = v.toFixed(1);
+    document.getElementById('bar' + k).style.width = imuToBarWidth(v, gyroMax);
+  });
+}
+
+/* ================================================================
+ *  摄像头控制
+ * ================================================================ */
+const camView  = document.getElementById('camView');
+const camLabel = document.getElementById('camLabel');
+let camMode = 'stream';
+
+function toggleCam() {
+  camOn = !camOn;
+  if (camOn) startCam(); else stopCam();
+}
+
+function startCam() {
+  const host = window.location.hostname || '192.168.4.1';
+  if (camMode === 'stream') {
+    camView.src = `http://${host}:8081/stream`;
+    camView.onerror = () => {
+      console.warn('MJPEG stream failed, fallback to polling');
+      camMode = 'poll';
+      startCamPoll(host);
+    };
+    camLabel.textContent = '🔴 MJPEG 240×240';
+  } else {
+    startCamPoll(host);
+  }
+  document.getElementById('btnCam').textContent = '⏹️';
+}
+
+function startCamPoll(host) {
+  camLabel.textContent = '🔴 轮询 240×240';
+  async function loop() {
+    while (camOn) {
+      try {
+        const res = await fetch(`http://${host}/capture?t=${Date.now()}`);
+        if (!res.ok) throw new Error(res.status);
+        const blob = await res.blob();
+        const oldSrc = camView.src;
+        camView.src = URL.createObjectURL(blob);
+        if (oldSrc && oldSrc.startsWith('blob:')) URL.revokeObjectURL(oldSrc);
+      } catch (e) {
+        await new Promise(r => setTimeout(r, 1000));
+      }
+      await new Promise(r => setTimeout(r, 83));
+    }
+  }
+  loop();
+}
+
+function stopCam() {
+  camView.src = '';
+  camLabel.textContent = '摄像头未开启';
+  document.getElementById('btnCam').textContent = '📷';
+}
+
+function snapShot() {
+  const host = window.location.hostname || '192.168.4.1';
+  const a = document.createElement('a');
+  a.href = `http://${host}/capture?t=${Date.now()}`;
+  a.download = `dooiroi_${Date.now()}.jpg`;
+  a.click();
+}
+
+/* ================================================================
+ *  虚拟摇杆 (Canvas)
+ * ================================================================ */
+const joyCanvas = document.getElementById('joystick');
+const joyCtx    = joyCanvas.getContext('2d');
+const JR        = 100;
+const KNOB_R    = 28;
+const DEAD_ZONE = 0.05;
+
+let joyActive    = false;
+let joyX         = 0;
+let joyY         = 0;
+
+function drawJoystick() {
+  const cx = JR, cy = JR;
+  joyCtx.clearRect(0, 0, JR * 2, JR * 2);
+
+  const grad = joyCtx.createRadialGradient(cx, cy, 10, cx, cy, JR);
+  grad.addColorStop(0, '#1a2233');
+  grad.addColorStop(1, '#0d1117');
+  joyCtx.beginPath();
+  joyCtx.arc(cx, cy, JR - 2, 0, Math.PI * 2);
+  joyCtx.fillStyle = grad;
+  joyCtx.fill();
+  joyCtx.strokeStyle = '#30363d';
+  joyCtx.lineWidth = 2;
+  joyCtx.stroke();
+
+  joyCtx.strokeStyle = 'rgba(88,166,255,0.15)';
+  joyCtx.lineWidth = 1;
+  joyCtx.beginPath();
+  joyCtx.moveTo(cx, 10); joyCtx.lineTo(cx, JR * 2 - 10);
+  joyCtx.moveTo(10, cy); joyCtx.lineTo(JR * 2 - 10, cy);
+  joyCtx.stroke();
+
+  joyCtx.beginPath();
+  joyCtx.arc(cx, cy, JR * 0.65, 0, Math.PI * 2);
+  joyCtx.strokeStyle = 'rgba(88,166,255,0.08)';
+  joyCtx.stroke();
+
+  const kx = cx + joyX * (JR - KNOB_R - 4);
+  const ky = cy - joyY * (JR - KNOB_R - 4);
+
+  joyCtx.beginPath();
+  joyCtx.arc(kx, ky, KNOB_R + 4, 0, Math.PI * 2);
+  joyCtx.fillStyle = 'rgba(88,166,255,0.12)';
+  joyCtx.fill();
+
+  const kGrad = joyCtx.createRadialGradient(kx - 4, ky - 4, 2, kx, ky, KNOB_R);
+  kGrad.addColorStop(0, '#79c0ff');
+  kGrad.addColorStop(0.7, '#1f6feb');
+  kGrad.addColorStop(1, '#0d419d');
+  joyCtx.beginPath();
+  joyCtx.arc(kx, ky, KNOB_R, 0, Math.PI * 2);
+  joyCtx.fillStyle = kGrad;
+  joyCtx.fill();
+  joyCtx.strokeStyle = 'rgba(255,255,255,0.2)';
+  joyCtx.lineWidth = 1.5;
+  joyCtx.stroke();
+}
+
+function joyFromEvent(e) {
+  const rect = joyCanvas.getBoundingClientRect();
+  let clientX, clientY;
+  if (e.touches) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+  else { clientX = e.clientX; clientY = e.clientY; }
+  let dx = (clientX - rect.left - JR) / (JR - KNOB_R);
+  let dy = -(clientY - rect.top - JR) / (JR - KNOB_R);
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  if (dist > 1) { dx /= dist; dy /= dist; }
+  joyX = dx; joyY = dy;
+  drawJoystick();
+  document.getElementById('vT').textContent = joyY.toFixed(2);
+  document.getElementById('vS').textContent = joyX.toFixed(2);
+}
+
+function joyRelease() {
+  joyActive = false; joyX = 0; joyY = 0;
+  drawJoystick();
+  document.getElementById('vT').textContent = '0.00';
+  document.getElementById('vS').textContent = '0.00';
+  sendJoystick(0, 0);
+}
+
+joyCanvas.addEventListener('mousedown', e => { joyActive = true; joyFromEvent(e); });
+window.addEventListener('mousemove', e => { if (joyActive) joyFromEvent(e); });
+window.addEventListener('mouseup', () => { if (joyActive) joyRelease(); });
+joyCanvas.addEventListener('touchstart', e => { e.preventDefault(); joyActive = true; joyFromEvent(e); }, { passive: false });
+window.addEventListener('touchmove', e => { if (joyActive) { e.preventDefault(); joyFromEvent(e); } }, { passive: false });
+window.addEventListener('touchend', () => { if (joyActive) joyRelease(); });
+window.addEventListener('touchcancel', () => { if (joyActive) joyRelease(); });
+
+setInterval(() => {
+  if (joyActive && wsReady) {
+    const t = Math.abs(joyY) < DEAD_ZONE ? 0 : joyY;
+    const s = Math.abs(joyX) < DEAD_ZONE ? 0 : joyX;
+    sendJoystick(t, s);
+  }
+}, 50);
+
+/* ================================================================
+ *  初始化
+ * ================================================================ */
+drawJoystick();
+wsConnect();
+</script>
+</body>
+</html>

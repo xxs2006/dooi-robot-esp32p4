@@ -1,0 +1,41 @@
+﻿{
+  "scene_name": "action_nod_agree",
+  "description": "点头同意：笑眼+绿灯+眼上下点+手臂配合（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "yes_sir",
+      "weight": 100,
+      "description": "点头确认：笑眼+绿灯+眼上下点两次+手臂张合（舵机自复位），最后眼回正",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_green_1000ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "head_nod_yes.json"
+        }
+      ]
+    }
+  ]
+}

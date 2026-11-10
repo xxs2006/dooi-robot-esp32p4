@@ -1,0 +1,47 @@
+﻿{
+  "scene_name": "action_cheer",
+  "description": "加油打气场景：笑眼+橙呼吸+双臂打气+上前+喝彩声（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "go_go",
+      "weight": 100,
+      "description": "加油：笑眼+橙呼吸+双臂上下打气+小前进+喝彩声",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_orange_1000ms.json"
+        },
+        {
+          "time_ms": 150,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "wow.json"
+        },
+        {
+          "time_ms": 200,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "cheer_pump.json"
+        },
+        {
+          "time_ms": 700,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "forward_step_quick.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "asset_id": "servo_arm_reset_center",
+  "description": "系统复位：双臂到180度（dooi_reset）",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0, "left_arm": 180, "right_arm": 180, "duration": 1000 }
+  ]
+}

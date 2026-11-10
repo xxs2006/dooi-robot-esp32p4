@@ -1,0 +1,72 @@
+{
+  "scene_name": "angry",
+  "description": "生气场景",
+  "priority": "high",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "standard",
+      "weight": 35,
+      "description": "标准愤怒：怒瞪眼+红灯+双臂90~100度小幅颤抖，自动复位135度（对应angry）",
+      "timeline": [
+        {
+          "time_ms": 50,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "angry.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "angry.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_red.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "body_angry_tense.json"
+        }
+      ]
+    },
+    {
+      "name": "flash_rage",
+      "weight": 20,
+      "description": "闪灯怒：更凶的怒瞪眼1+红灯对称快闪250ms+双臂90~100度小幅颤抖（对应angry_basic，已自复位）",
+      "timeline": [
+        {
+          "time_ms": 50,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "angry.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "angry1.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 8,
+          "asset": "blink_red_250ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "body_angry_tense.json"
+        }
+      ]
+    }
+  ]
+}

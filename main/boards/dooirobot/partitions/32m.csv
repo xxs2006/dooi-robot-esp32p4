@@ -1,0 +1,36 @@
+# ESP-IDF Partition Table（32MB Flash）
+# Name,   Type, SubType, Offset,     Size,   Flags
+#
+# ============================================================================
+# 布局总览（总容量 0x2000000 = 32MB）
+# ----------------------------------------------------------------------------
+#   nvs        0x0009000  0x104000   1.02MB  NVS 参数（nvsfactory 已合入 nvs）
+#   phy_init   0x010D000  0x001000      4KB  RF 校准
+#   factory    0x0110000  0xC00000     12MB  应用固件（原 20MB -> 12MB）
+#   model      0x0D10000  0x400000      4MB  语音模型 srmodels.bin（新增）
+#   assets     0x1110000  0x800000      8MB  可下载 UI 资源（字体/表情/主题）
+#   behavior   0x1910000  0x200000      2MB  行为资源 JSON -> /resources（spiffs）
+#   (保留)     0x1B10000  0x04F0000   ~5MB  未分配，预留给后续扩容
+# ============================================================================
+#
+# 说明：
+#  1) 新增 model 分区：ESP-SR 的 srmodels.bin（约 2.9MB）不再塞进 assets.bin
+#     （也不在 app 里），固件初始化时由 esp_srmodel_init("model") 直接 mmap 使用，
+#     模型可单独烧录 / 单独更换，改唤醒词不需要重编整个固件。
+#  2) factory 20MB -> 12MB：实测 xiaozhi.bin 约 9.5MB，仍有约 2.5MB（21%）余量。
+#  3) 网页(html/css/js/wasm)与界面图片(gif/png)继续内嵌在 app 里：
+#     它们需要 mmap 零拷贝直接访问，走文件系统会明显卡顿（切页/动画卡、页面加载慢），
+#     因此不拆分区。
+#  4) assets 分区是打包的 assets.bin（index.json + 资源），开机 mmap 零拷贝读取，
+#     存放服务端下发的字体 / 表情 / 主题等大资源。
+#  5) nvs 起始偏移 0x9000 保持不变，老设备升级不会丢参数；但其余分区偏移都变了，
+#     升级后请整片重烧（idf.py erase-flash 后再 flash 最保险）。
+#
+# 注意：factory 必须 0x10000 对齐，因此 phy_init 之后留了 0x2000 的空隙。
+
+nvs,      data, nvs,      0x9000,    1040K,
+phy_init, data, phy,      0x10D000,  4K,
+factory,  app,  factory,  0x110000,  12M,
+model,    data, spiffs,   0xD10000,  4M,
+assets,   data, spiffs,   0x1110000, 8M,
+behavior, data, spiffs,   0x1910000, 2M,

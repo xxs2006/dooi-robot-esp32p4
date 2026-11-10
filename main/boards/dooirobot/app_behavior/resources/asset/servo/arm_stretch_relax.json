@@ -1,0 +1,13 @@
+{
+  "asset_id": "servo_arm_stretch_relax",
+  "description": "伸懒腰：双臂90→170→10→左50右130→左130右50→归位90",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 90,  "right_arm": 90,  "duration": 800 },
+    { "time_ms": 300,  "left_arm": 170, "right_arm": 170, "duration": 1200 },
+    { "time_ms": 2700, "left_arm": 10,  "right_arm": 10,  "duration": 1500 },
+    { "time_ms": 5700, "left_arm": 50,  "right_arm": 130, "duration": 800 },
+    { "time_ms": 6500, "left_arm": 130, "right_arm": 50,  "duration": 800 },
+    { "time_ms": 7300, "left_arm": 90,  "right_arm": 90,  "duration": 1000 }
+  ]
+}

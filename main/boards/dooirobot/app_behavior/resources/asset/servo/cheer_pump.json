@@ -1,0 +1,49 @@
+{
+  "asset_id": "cheer_pump",
+  "description": "加油：双臂上下摆动打气",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 250
+    },
+    {
+      "time_ms": 200,
+      "left_arm": 40,
+      "right_arm": 40,
+      "duration": 200
+    },
+    {
+      "time_ms": 400,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 200
+    },
+    {
+      "time_ms": 600,
+      "left_arm": 40,
+      "right_arm": 40,
+      "duration": 200
+    },
+    {
+      "time_ms": 800,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 200
+    },
+    {
+      "time_ms": 1000,
+      "left_arm": 40,
+      "right_arm": 40,
+      "duration": 200
+    },
+    {
+      "time_ms": 1200,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 400
+    }
+  ]
+}

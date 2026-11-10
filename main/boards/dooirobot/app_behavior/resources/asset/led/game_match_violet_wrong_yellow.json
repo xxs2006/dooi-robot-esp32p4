@@ -1,0 +1,8 @@
+{
+  "asset_id": "game_match_violet_wrong_yellow",
+  "description": "游戏回合：左(match)紫 右(错)黄",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "solid", "left_color": "#AA33FF", "right_color": "#FFDD00" }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "scene_name": "action_focus_top_right",
+  "description": "注视右上方+右蓝灯+左手指向（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "point_top_right",
+      "weight": 100,
+      "description": "瞟右上+左蓝右灭+左臂指向上停住，结束关灯",
+      "timeline": [
+        { "time_ms": 50,  "type": "audio", "repeat": 1, "asset": "happy.json" },
+        { "time_ms": 0,   "type": "eye",   "repeat": 1, "asset": "focus_top_right.json" },
+        { "time_ms": 0,   "type": "led",   "repeat": 1, "asset": "set_blue_right_off_left.json" },
+        { "time_ms": 0,   "type": "servo", "repeat": 1, "asset": "focus_point_right.json" },
+        { "time_ms": 700, "type": "led",   "repeat": 1, "asset": "off.json" }
+      ]
+    }
+  ]
+}

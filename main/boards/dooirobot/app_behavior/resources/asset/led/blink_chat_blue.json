@@ -1,0 +1,9 @@
+{
+  "asset_id": "led_blink_chat_blue",
+  "description": "聊天用户发言提示：暗青蓝闪烁，周期100ms（对应原 app_led_set_blink(0x000D0D,100,true)）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "blink", "color": "#000D0D", "period_ms": 100, "symmetric": true },
+    { "time_ms": 550, "mode": "off" }
+  ]
+}

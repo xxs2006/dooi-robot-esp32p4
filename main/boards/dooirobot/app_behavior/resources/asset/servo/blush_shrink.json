@@ -1,0 +1,25 @@
+{
+  "asset_id": "blush_shrink",
+  "description": "害羞脸红：双臂内收",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 400
+    },
+    {
+      "time_ms": 350,
+      "left_arm": 75,
+      "right_arm": 75,
+      "duration": 400
+    },
+    {
+      "time_ms": 1750,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 500
+    }
+  ]
+}

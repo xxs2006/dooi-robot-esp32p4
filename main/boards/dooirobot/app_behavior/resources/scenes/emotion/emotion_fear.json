@@ -1,0 +1,47 @@
+{
+  "scene_name": "fear",
+  "description": "恐惧场景：瞪眼+蓝灯快闪+双臂举落+前冲（高优先级，可中断）",
+  "priority": "high",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "startle",
+      "weight": 100,
+      "description": "受惊弹跳：瞪眼+蓝闪500ms+双臂高举→掉+前冲，自动复位",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "surprised.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "amazed.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 6,
+          "asset": "blink_blue_500ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "fear_raise_drop.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "forward_dash.json"
+        }
+      ]
+    }
+  ]
+}

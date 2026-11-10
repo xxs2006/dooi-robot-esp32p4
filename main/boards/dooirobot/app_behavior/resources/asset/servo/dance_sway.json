@@ -1,0 +1,10 @@
+{
+  "asset_id": "servo_dance_sway",
+  "description": "跳舞摇摆：左100右120 → 左120右100 → 归位90",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,   "left_arm": 100, "right_arm": 120, "duration": 600 },
+    { "time_ms": 350, "left_arm": 120, "right_arm": 100, "duration": 500 },
+    { "time_ms": 850, "left_arm": 90,  "right_arm": 90,  "duration": 500 }
+  ]
+}

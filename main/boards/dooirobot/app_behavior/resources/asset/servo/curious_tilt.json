@@ -1,0 +1,9 @@
+{
+  "asset_id": "servo_curious_tilt",
+  "description": "好奇动作：右臂抬55度后归位90",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 135, "right_arm": 55, "duration": 800 },
+    { "time_ms": 2100, "left_arm": 135, "right_arm": 90, "duration": 500 }
+  ]
+}

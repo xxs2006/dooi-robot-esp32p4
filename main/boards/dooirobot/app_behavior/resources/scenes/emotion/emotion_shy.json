@@ -1,0 +1,47 @@
+{
+  "scene_name": "shy",
+  "description": "害羞场景：看下+粉色呼吸+双臂收+后退躲（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "hide_face",
+      "weight": 100,
+      "description": "捂脸害羞：眼看下方+粉色长呼吸+双臂收敛+左臂微动+后退，自动复位",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "focus_below_center.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 2,
+          "asset": "breath_pink_2000ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "shy_arms.json"
+        },
+        {
+          "time_ms": 2000,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "backward_quick.json"
+        }
+      ]
+    }
+  ]
+}

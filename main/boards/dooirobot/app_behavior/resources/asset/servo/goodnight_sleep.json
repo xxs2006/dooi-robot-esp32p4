@@ -1,0 +1,14 @@
+{
+  "asset_id": "servo_goodnight_sleep",
+  "description": "晚安入睡：右臂揉困→双臂80→70→65停住（不复位）",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 135, "right_arm": 30, "duration": 800 },
+    { "time_ms": 400,  "left_arm": 135, "right_arm": 50, "duration": 400 },
+    { "time_ms": 700,  "left_arm": 135, "right_arm": 30, "duration": 400 },
+    { "time_ms": 1400, "left_arm": 135, "right_arm": 90, "duration": 600 },
+    { "time_ms": 2000, "left_arm": 80,  "right_arm": 80, "duration": 1500 },
+    { "time_ms": 5600, "left_arm": 70,  "right_arm": 70, "duration": 2000 },
+    { "time_ms": 9600, "left_arm": 65,  "right_arm": 65, "duration": 2000 }
+  ]
+}

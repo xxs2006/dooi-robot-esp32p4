@@ -1,0 +1,11 @@
+{
+  "asset_id": "motor_sway_side",
+  "description": "摇头拒绝左右晃：右转→左转→右转→停止",
+  "type": "motor",
+  "keyframes": [
+    { "time_ms": 0,   "speed_l": 60,  "speed_r": -60, "duration_ms": 200 },
+    { "time_ms": 250, "speed_l": -60, "speed_r": 60,  "duration_ms": 200 },
+    { "time_ms": 500, "speed_l": 60,  "speed_r": -60, "duration_ms": 200 },
+    { "time_ms": 750, "speed_l": 0,   "speed_r": 0,   "duration_ms": 0 }
+  ]
+}

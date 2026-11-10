@@ -1,0 +1,41 @@
+﻿{
+  "scene_name": "action_greeting",
+  "description": "唤醒问候场景：眯眼笑+友好橙呼吸+挥手+问候声（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "warm_hello",
+      "weight": 100,
+      "description": "热情挥手：笑眼+红呼吸3秒+右臂挥手（舵机自复位）",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 1,
+          "asset": "breath_orange_1000ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "arm_wave_hello.json"
+        }
+      ]
+    }
+  ]
+}

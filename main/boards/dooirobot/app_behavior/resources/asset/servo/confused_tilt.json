@@ -1,0 +1,37 @@
+{
+  "asset_id": "confused_tilt",
+  "description": "困惑：歪头+左臂抬至耳边似挠头，右臂微收",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 350
+    },
+    {
+      "time_ms": 300,
+      "left_arm": 75,
+      "right_arm": 80,
+      "duration": 400
+    },
+    {
+      "time_ms": 700,
+      "left_arm": 78,
+      "right_arm": 80,
+      "duration": 300
+    },
+    {
+      "time_ms": 1000,
+      "left_arm": 75,
+      "right_arm": 80,
+      "duration": 300
+    },
+    {
+      "time_ms": 1300,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 500
+    }
+  ]
+}

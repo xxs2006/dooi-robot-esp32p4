@@ -1,0 +1,16 @@
+{
+  "scene_name": "action_chat_user",
+  "description": "用户发言时的 LED 提示（闪烁约500ms后自动熄灭）",
+  "priority": "low",
+  "config": {},
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "用户发言：暗青蓝闪烁1次",
+      "timeline": [
+        { "time_ms": 0, "type": "led", "repeat": 1, "asset": "blink_chat_blue.json" }
+      ]
+    }
+  ]
+}

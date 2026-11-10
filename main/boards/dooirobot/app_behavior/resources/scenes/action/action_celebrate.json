@@ -1,0 +1,47 @@
+﻿{
+  "scene_name": "action_celebrate",
+  "description": "庆祝场景：大笑眼+彩虹灯+双臂上举欢呼+欢呼声（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "hooray",
+      "weight": 100,
+      "description": "庆祝：大笑眼+彩虹循环+双臂上举挥舞+欢呼声",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 4,
+          "asset": "rainbow_1500ms.json"
+        },
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "laugh.json"
+        },
+        {
+          "time_ms": 250,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "celebrate_raise.json"
+        },
+        {
+          "time_ms": 1300,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy1.json"
+        }
+      ]
+    }
+  ]
+}

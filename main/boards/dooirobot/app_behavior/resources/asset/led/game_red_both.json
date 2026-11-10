@@ -1,0 +1,8 @@
+{
+  "asset_id": "game_red_both",
+  "description": "游戏反馈：左右双红",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "solid", "left_color": "#FF0000", "right_color": "#FF0000" }
+  ]
+}

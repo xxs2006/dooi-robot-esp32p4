@@ -1,0 +1,22 @@
+{
+  "scene_name": "action_angry_focus_right",
+  "description": "右视怒捶：怒视右侧 + 右暗红灯 + 头偏右 + 怒吼音效（低优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "怒视右侧并出拳",
+      "timeline": [
+        { "time_ms": 50,   "type": "audio", "repeat": 1, "asset": "angry.json" },
+        { "time_ms": 0,    "type": "eye",   "repeat": 1, "asset": "angry_right.json" },
+        { "time_ms": 0,    "type": "led",   "repeat": 1, "asset": "set_dark_red_right.json" },
+        { "time_ms": 0,    "type": "servo", "repeat": 1, "asset": "head_angry_look_right.json" },
+        { "time_ms": 2000, "type": "led",   "repeat": 1, "asset": "off.json" }
+      ]
+    }
+  ]
+}

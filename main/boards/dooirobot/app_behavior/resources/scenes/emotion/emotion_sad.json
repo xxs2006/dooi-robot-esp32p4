@@ -1,0 +1,47 @@
+{
+  "scene_name": "sad",
+  "description": "悲伤场景：哭眼+紫色呼吸+双臂下垂+后退（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "weep",
+      "weight": 100,
+      "description": "悲伤哭泣：紫灯呼吸+双臂垂落+缓慢后退，序列结束自动复位",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "sad.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "sad.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 2,
+          "asset": "breath_purple_2000ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "sad_drop.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "backward_slow.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "scene_name": "game_timeout",
+  "description": "游戏超时：宝石红虹膜，双红LED，悲伤表情，舵机归中",
+  "priority": "high",
+  "config": {
+    "no_restore": true
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "游戏超时：悲伤反馈",
+      "timeline": [
+        { "time_ms": 0, "type": "led",   "asset": "game_red_both.json" },
+        { "time_ms": 0, "type": "eye",   "asset": "sad.json" },
+        { "time_ms": 0, "type": "servo", "asset": "arm_stretch_relax.json" }
+      ]
+    }
+  ]
+}

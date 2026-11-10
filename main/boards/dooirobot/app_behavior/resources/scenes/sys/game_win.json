@@ -1,0 +1,21 @@
+{
+  "scene_name": "game_win",
+  "description": "游戏通关：翡翠绿虹膜，双绿LED，开心表情，庆祝动作，播放胜利旋律",
+  "priority": "high",
+  "config": {
+    "no_restore": true
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "游戏通关：庆祝",
+      "timeline": [
+        { "time_ms": 0, "type": "led",   "asset": "game_green_both.json" },
+        { "time_ms": 0, "type": "eye",   "asset": "happy.json" },
+        { "time_ms": 0, "type": "servo", "asset": "celebrate_raise.json" },
+        { "time_ms": 0, "type": "audio", "asset": "wow.json" }
+      ]
+    }
+  ]
+}

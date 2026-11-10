@@ -1,0 +1,11 @@
+{
+  "asset_id": "happy",
+  "description": "开心提示音",
+  "type": "audio",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "clip": "happy"
+    }
+  ]
+}

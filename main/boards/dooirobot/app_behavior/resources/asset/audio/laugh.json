@@ -1,0 +1,11 @@
+{
+  "asset_id": "laugh",
+  "description": "笑声",
+  "type": "audio",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "clip": "laugh"
+    }
+  ]
+}

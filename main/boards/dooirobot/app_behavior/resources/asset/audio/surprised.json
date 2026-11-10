@@ -1,0 +1,11 @@
+{
+  "asset_id": "surprised",
+  "description": "惊讶声",
+  "type": "audio",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "clip": "surprised"
+    }
+  ]
+}

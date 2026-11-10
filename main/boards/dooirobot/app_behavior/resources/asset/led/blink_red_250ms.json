@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_blink_red_250ms",
+  "description": "LED红色闪烁，周期250ms，对称（愤怒alt用）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "blink", "color": "#FF0000", "period_ms": 250, "symmetric": true }
+  ]
+}

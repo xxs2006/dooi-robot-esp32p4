@@ -1,0 +1,22 @@
+{
+  "scene_name": "action_focus_top_left",
+  "description": "注视左上方",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "point_top_left",
+      "weight": 100,
+      "description": "瞟左上+左灭右蓝+右臂指向上停住，结束关灯",
+      "timeline": [
+        { "time_ms": 50,  "type": "audio", "repeat": 1, "asset": "happy.json" },
+        { "time_ms": 0,   "type": "eye",   "repeat": 1, "asset": "focus_top_left.json" },
+        { "time_ms": 0,   "type": "led",   "repeat": 1, "asset": "set_blue_left_off_right.json" },
+        { "time_ms": 0,   "type": "servo", "repeat": 1, "asset": "focus_point_left.json" },
+        { "time_ms": 700, "type": "led",   "repeat": 1, "asset": "off.json" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "asset_id": "happy2",
+  "description": "开心表情2（大笑）",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "expr": "happy2" }
+  ]
+}

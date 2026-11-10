@@ -1,0 +1,8 @@
+{
+  "asset_id": "focus_below_center",
+  "description": "注视下方中央",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "expr": "focus_below_center" }
+  ]
+}

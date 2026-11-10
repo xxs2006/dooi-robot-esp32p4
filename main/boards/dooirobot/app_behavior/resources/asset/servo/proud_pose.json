@@ -1,0 +1,31 @@
+{
+  "asset_id": "proud_pose",
+  "description": "得意：右臂上扬叉腰，左臂下垂",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 400
+    },
+    {
+      "time_ms": 350,
+      "left_arm": 150,
+      "right_arm": 30,
+      "duration": 500
+    },
+    {
+      "time_ms": 850,
+      "left_arm": 150,
+      "right_arm": 30,
+      "duration": 800
+    },
+    {
+      "time_ms": 1650,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 600
+    }
+  ]
+}

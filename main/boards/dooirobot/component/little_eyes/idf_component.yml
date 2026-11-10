@@ -1,0 +1,10 @@
+## little_eyes（Uncanny Eyes）—— 跨平台仿生眼睛渲染库
+## 本组件为"发行版"：头文件 + 预编译静态库（lib/<IDF_TARGET>/liblittle_eyes.a）
+## 库本身不依赖额外组件，平台层用到 esp_timer / esp_random（esp_hw_support）
+dependencies:
+  idf:
+    version: ">=4.4"
+
+description: 跨平台仿生眼睛渲染库 little_eyes（头文件 + 预编译库）
+version: "1.1.0"
+license: MIT

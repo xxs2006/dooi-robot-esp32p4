@@ -1,0 +1,16 @@
+{
+  "scene_name": "status_idle",
+  "description": "上电默认待机状态",
+  "config": {
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "timeline": [
+        { "time_ms": 0, "channel": "servo", "repeat": 1, "asset": "arm_reset_center.json" },
+        { "time_ms": 0, "channel": "led",   "repeat": 1, "asset": "off.json" }
+      ]
+    }
+  ]
+}

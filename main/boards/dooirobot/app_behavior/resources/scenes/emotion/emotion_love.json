@@ -1,0 +1,59 @@
+{
+  "scene_name": "love",
+  "description": "喜爱场景：笑眼+深粉呼吸+拥抱双臂+眼回正+上前（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "cuddle",
+      "weight": 100,
+      "description": "亲昵抱抱：笑眼+深粉呼吸+双臂抱+眯眼→眯眼变+双臂归位（已自复位）",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 4,
+          "asset": "breath_deeppink_800ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "love_embrace.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "eye_move.json"
+        },
+        {
+          "time_ms": 1700,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "forward_crawl.json"
+        },
+        {
+          "time_ms": 2200,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy1.json"
+        }
+      ]
+    }
+  ]
+}

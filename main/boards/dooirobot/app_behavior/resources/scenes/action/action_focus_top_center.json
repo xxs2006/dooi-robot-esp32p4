@@ -1,0 +1,18 @@
+{
+  "scene_name": "action_focus_top_center",
+  "description": "注视上方中央（低优先级，可中断）",
+  "priority": "low",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "look_up",
+      "weight": 100,
+      "description": "抬头看上方中心：仅切换表情",
+      "timeline": [
+        { "time_ms": 0, "type": "eye", "repeat": 1, "asset": "focus_top_center.json" }
+      ]
+    }
+  ]
+}

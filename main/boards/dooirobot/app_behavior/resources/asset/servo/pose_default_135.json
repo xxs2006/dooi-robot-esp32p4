@@ -1,0 +1,8 @@
+{
+  "asset_id": "pose_default_135",
+  "description": "默认姿态135度",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0, "left_arm": 135, "right_arm": 135, "duration": 800 }
+  ]
+}

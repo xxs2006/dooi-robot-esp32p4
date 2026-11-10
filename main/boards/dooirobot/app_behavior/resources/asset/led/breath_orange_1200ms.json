@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_breath_orange_1200ms",
+  "description": "LED橙色呼吸灯，周期1200ms（欢迎用）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "breath", "color": "#FFA500", "period_ms": 1200, "symmetric": true }
+  ]
+}

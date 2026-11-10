@@ -1,0 +1,8 @@
+{
+  "asset_id": "angry_right",
+  "description": "愤怒右视表情",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "expr": "angry_right" }
+  ]
+}

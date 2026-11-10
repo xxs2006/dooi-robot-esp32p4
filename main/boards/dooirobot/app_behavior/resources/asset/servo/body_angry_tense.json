@@ -1,0 +1,61 @@
+{
+  "asset_id": "servo_body_angry_tense",
+  "description": "愤怒基础动作：双臂在90~100度之间小幅颤抖（限制摆幅，避免打到手）",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 200
+    },
+    {
+      "time_ms": 150,
+      "left_arm": 100,
+      "right_arm": 100,
+      "duration": 100
+    },
+    {
+      "time_ms": 250,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 100
+    },
+    {
+      "time_ms": 350,
+      "left_arm": 100,
+      "right_arm": 100,
+      "duration": 100
+    },
+    {
+      "time_ms": 450,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 100
+    },
+    {
+      "time_ms": 550,
+      "left_arm": 100,
+      "right_arm": 100,
+      "duration": 100
+    },
+    {
+      "time_ms": 650,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 100
+    },
+    {
+      "time_ms": 750,
+      "left_arm": 100,
+      "right_arm": 100,
+      "duration": 100
+    },
+    {
+      "time_ms": 850,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 250
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "scene_name": "game_round_1_left",
+  "description": "第2回合-正确侧在左：紫罗兰虹膜，左(match)紫右(错)黄，注视左",
+  "priority": "high",
+  "config": {
+    "no_restore": true
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "第2回合-正确侧在左",
+      "timeline": [
+        { "time_ms": 0, "type": "iris",  "asset": "violet.json" },
+        { "time_ms": 50,  "type": "audio", "repeat": 1, "asset": "happy.json" },
+        { "time_ms": 0, "type": "led",   "asset": "game_match_yellow_wrong_violet.json" },
+        { "time_ms": 0, "type": "eye",   "asset": "focus_left.json" }
+      ]
+    }
+  ]
+}

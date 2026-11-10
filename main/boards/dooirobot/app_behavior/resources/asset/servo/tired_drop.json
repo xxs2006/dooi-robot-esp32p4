@@ -1,0 +1,25 @@
+{
+  "asset_id": "tired_drop",
+  "description": "疲惫：双臂缓慢下垂",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 600
+    },
+    {
+      "time_ms": 500,
+      "left_arm": 140,
+      "right_arm": 140,
+      "duration": 800
+    },
+    {
+      "time_ms": 1300,
+      "left_arm": 150,
+      "right_arm": 150,
+      "duration": 600
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_set_dark_amber",
+  "description": "LED左右设为深琥珀色（晚安昏昏欲睡）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "set", "left_color": "#442200", "right_color": "#442200" }
+  ]
+}

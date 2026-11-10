@@ -1,0 +1,55 @@
+{
+  "asset_id": "celebrate_raise",
+  "description": "庆祝：双臂上举挥舞",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 300
+    },
+    {
+      "time_ms": 250,
+      "left_arm": 0,
+      "right_arm": 0,
+      "duration": 250
+    },
+    {
+      "time_ms": 500,
+      "left_arm": 30,
+      "right_arm": 0,
+      "duration": 150
+    },
+    {
+      "time_ms": 650,
+      "left_arm": 0,
+      "right_arm": 30,
+      "duration": 150
+    },
+    {
+      "time_ms": 800,
+      "left_arm": 30,
+      "right_arm": 0,
+      "duration": 150
+    },
+    {
+      "time_ms": 950,
+      "left_arm": 0,
+      "right_arm": 30,
+      "duration": 150
+    },
+    {
+      "time_ms": 1100,
+      "left_arm": 0,
+      "right_arm": 0,
+      "duration": 200
+    },
+    {
+      "time_ms": 1300,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 500
+    }
+  ]
+}

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Dooi · 行为资源</title>
+<style>
+:root {
+  --bg0:#0d1117; --bg1:#161b22; --bg2:#21262d; --bg3:#30363d;
+  --tx0:#e6edf3; --tx1:#8b949e; --tx2:#484f58;
+  --ac:#58a6ff; --ac2:#1f6feb; --ok:#3fb950; --warn:#d29922; --err:#f85149;
+  --purple:#bc8cff; --cyan:#39c5cf; --orange:#ffa657; --pink:#ff7b72;
+  --radius:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg0);color:var(--tx0);height:100%;overflow:hidden;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg1);border-bottom:1px solid var(--bg3);flex-shrink:0}
+header h1{font-size:18px;font-weight:600}
+header h1 span{color:var(--tx1);font-weight:400}
+.hdr-status{font-size:13px;padding:4px 10px;border-radius:12px;background:var(--bg2);font-family:monospace}
+a.back{color:var(--ac);text-decoration:none;font-size:13px;padding:4px 10px;border:1px solid var(--bg3);border-radius:8px}
+a.back:hover{background:var(--bg2)}
+.layout{display:flex;flex:1;overflow:hidden;min-height:0}
+.sidebar{width:240px;min-width:200px;max-width:320px;background:var(--bg1);border-right:1px solid var(--bg3);display:flex;flex-direction:column;padding:0;resize:horizontal;flex-shrink:0}
+.sidebar-scroll{flex:1;overflow-y:auto;min-height:0;padding:4px 0}
+.cat{padding:4px 10px;font-size:12px;color:var(--tx1);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;position:sticky;top:0;background:var(--bg1);cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
+.cat:hover{color:var(--tx0)}
+.cat .arrow{display:inline-block;transition:transform .15s;font-size:10px;line-height:1}
+.cat.collapsed .arrow{transform:rotate(-90deg)}
+.cat .cat-count{margin-left:auto}
+.cat-list{display:block}
+.cat.collapsed + .cat-list{display:none}
+.file-item{padding:4px 12px 4px 24px;font-size:13px;cursor:pointer;border-left:2px solid transparent;word-break:break-all}
+.file-item:hover{background:var(--bg2)}
+.file-item.active{background:var(--bg2);border-left-color:var(--ac);color:var(--ac)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.toolbar{display:flex;gap:8px;padding:10px 12px;background:var(--bg1);border-bottom:1px solid var(--bg3);align-items:center;flex-wrap:wrap}
+.toolbar .path{flex:1;min-width:160px;background:var(--bg0);border:1px solid var(--bg3);color:var(--tx0);padding:6px 10px;border-radius:8px;font-family:monospace;font-size:12px}
+.toolbar .path:focus{outline:none;border-color:var(--ac)}
+button{background:var(--bg2);color:var(--tx0);border:1px solid var(--bg3);padding:6px 14px;border-radius:8px;font-size:13px;cursor:pointer;white-space:nowrap}
+button:hover{background:var(--bg3)}
+button.primary{background:var(--ac2);border-color:var(--ac2);color:#fff}
+button.primary:hover{background:var(--ac)}
+button.danger{background:transparent;border-color:var(--err);color:var(--err)}
+button.danger:hover{background:var(--err);color:#fff}
+.editor-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:12px;min-height:0}
+/* 语法高亮编辑器：底层高亮 pre + 上层透明 textarea 叠加 */
+.editor-container{flex:1;min-height:0;position:relative;overflow:hidden;border:1px solid var(--bg3);border-radius:8px;background:var(--bg0)}
+.editor-container:focus-within{border-color:var(--ac)}
+.hl{position:absolute;inset:0;margin:0;padding:12px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:13px;line-height:1.5;white-space:pre;word-wrap:break-word;color:var(--tx1);overflow:hidden;pointer-events:none;tab-size:2}
+.editor-container textarea{
+  position:absolute;inset:0;width:100%;height:100%;background:transparent;color:transparent;
+  caret-color:var(--tx0);border:none;outline:none;padding:12px;
+  font-family:'SF Mono',Menlo,Consolas,monospace;font-size:13px;line-height:1.5;
+  resize:none;tab-size:2;white-space:pre;word-wrap:break-word;overflow:auto}
+.editor-container textarea::selection{background:rgba(88,166,255,.3);color:transparent}
+.editor-container textarea::placeholder{color:var(--tx2)}
+/* JSON token 配色 —— 模仿 VS Code 默认深色主题的 JSON 配色 */
+.hl{color:#d4d4d4}                              /* 默认文字 */
+.hl .k{color:#9cdcfe}                           /* 属性名：浅蓝 */
+.hl .s{color:#ce9178}                           /* 字符串：橙棕 */
+.hl .n{color:#b5cea8}                           /* 数字：浅绿 */
+.hl .b{color:#569cd6}                           /* true/false：蓝 */
+.hl .l{color:#569cd6}                           /* null：蓝 */
+.hl .p{color:#808080}                           /* 标点：灰 */
+.meta{font-size:11px;color:var(--tx1);padding:4px 2px;font-family:monospace;display:flex;justify-content:space-between}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:8px;font-size:14px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90vw;word-break:break-all}
+.toast.show{opacity:1}
+.toast.ok{background:var(--ok);color:#0d1117}
+.toast.err{background:var(--err);color:#fff}
+.toast.warn{background:var(--warn);color:#0d1117}
+.empty{padding:40px 20px;text-align:center;color:var(--tx2);font-size:14px}
+.cat-count{color:var(--tx2);font-size:11px;margin-left:4px}
+/* ---- 侧栏分区标题（场景/状态 vs 资源） ---- */
+.section-title{padding:8px 12px 3px;font-size:10px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.8px;border-top:1px solid var(--bg3);margin-top:4px;flex-shrink:0}
+.section-title:first-child{border-top:none;margin-top:0;padding-top:4px}
+/* ---- 前缀子分组 ---- */
+.sub-cat{padding:3px 10px 3px 20px;font-size:12px;color:var(--tx1);cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px;border-left:1px solid var(--bg3)}
+.sub-cat:hover{color:var(--tx0);background:var(--bg2)}
+.sub-cat .arrow{display:inline-block;transition:transform .15s;font-size:10px;line-height:1}
+.sub-cat.collapsed .arrow{transform:rotate(-90deg)}
+.sub-cat .sub-cat-count{margin-left:auto;color:var(--tx2);font-size:11px}
+.sub-list{display:block}
+.sub-cat.collapsed + .sub-list{display:none}
+.file-item.sub{padding-left:40px}
+/* ---- 侧栏工具按钮 ---- */
+.sidebar-tools{padding:4px 8px;display:flex;gap:6px;flex-shrink:0}
+.sidebar-tools button{flex:1;padding:4px 6px;font-size:12px}
+/* ---- 侧栏搜索框 ---- */
+.searchbox-wrap{padding:6px 8px;position:relative;flex-shrink:0;background:var(--bg1);border-bottom:1px solid var(--bg3)}
+.searchbox{width:100%;padding:6px 9px;background:var(--bg0);border:1px solid var(--bg3);color:var(--tx0);border-radius:8px;font-size:12px;outline:none}
+.jumpbar{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;background:var(--bg1);border-bottom:1px solid var(--bg3);flex-shrink:0}
+.jump-chip{padding:3px 9px;font-size:12px;border:1px solid var(--bg3);background:var(--bg2);color:var(--tx1);border-radius:14px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.jump-chip:hover{color:var(--tx0);border-color:var(--ac2);background:var(--bg0)}
+.jump-chip:active{transform:scale(.96)}
+.jump-chip.active{background:var(--ac);border-color:var(--ac);color:#0d1117;font-weight:600}
+.searchbox:focus{border-color:var(--ac)}
+.searchbox::placeholder{color:var(--tx2)}
+/* ---- 关联资源 / 快速跳转面板 ---- */
+.linkbar{border-bottom:1px solid var(--bg3);background:var(--bg1);flex-shrink:0;display:none}
+.linkbar.show{display:block}
+.linkbar-head{display:flex;align-items:center;gap:8px;padding:8px 14px 4px;font-size:12px;color:var(--tx1);cursor:pointer;user-select:none}
+.linkbar-head:hover{color:var(--tx0)}
+.linkbar-head .arrow{font-size:10px;transition:transform .15s}
+.linkbar.collapsed .arrow{transform:rotate(-90deg)}
+.linkbar-head b{color:var(--tx0);font-weight:600;font-size:12px}
+#refcount{color:var(--tx2);font-size:11px}
+.linkbar-body{display:flex;flex-direction:column;gap:4px;padding:6px 14px 10px}
+.linkbar.collapsed .linkbar-body{display:none}
+.ref-empty{padding:4px 2px;font-size:12px;color:var(--tx2)}
+.rg{display:flex;align-items:baseline;gap:8px;margin-top:5px;flex-wrap:wrap}
+.rg-ttl{flex:none;min-width:72px;font-size:11px;color:var(--tx1);letter-spacing:.3px}
+.refs{display:inline-flex;flex-wrap:wrap;gap:6px}
+.ref{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border:1px solid var(--bg3);background:var(--bg0);border-radius:20px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:monospace;color:var(--ac)}
+.ref:hover{background:var(--bg2);border-color:var(--ac2)}
+.ref .dot{width:7px;height:7px;border-radius:50%;background:var(--cc,#58a6ff);flex:none}
+.ref.miss{color:var(--err);border:1px dashed var(--err)}
+.ref.back{color:var(--tx0)}
+@media(max-width:640px){.sidebar{width:160px;min-width:120px}.toolbar{gap:4px}.toolbar button{padding:6px 8px;font-size:12px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Dooi · <span>行为资源编辑器</span></h1>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="hdr-status" id="stat">就绪</span>
+    <a class="back" href="/">返回首页</a>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar"><div class="empty">加载中…</div></aside>
+  <main class="main">
+    <div class="toolbar">
+      <input class="path" id="path" placeholder="如 scenes/angry.json（新建时编辑此行）" spellcheck="false">
+      <button id="btnNew" class="primary">新建</button>
+      <button id="btnSave" class="primary">保存</button>
+      <button id="btnDelete" class="danger">删除</button>
+      <button id="btnPlay" class="primary" style="background:var(--ok);border-color:var(--ok);color:#0d1117">▶ 执行</button>
+      <button id="btnFmt">格式化</button>
+      <button id="btnRefresh">刷新列表</button>
+    </div>
+    <!-- 关联资源 / 快速跳转 面板 -->
+    <div class="linkbar" id="linkbar">
+      <div class="linkbar-head" id="linkhead">
+        <span class="arrow">▾</span>
+        <b>关联资源 &amp; 快速跳转</b>
+        <span id="refcount"></span>
+      </div>
+      <div class="linkbar-body" id="refbody"></div>
+    </div>
+    <div class="editor-wrap">
+      <div class="meta"><span id="metaPath">未选择文件</span><span id="metaInfo"></span></div>
+      <div class="editor-container">
+        <pre id="hl" class="hl" aria-hidden="true"></pre>
+        <textarea id="editor" spellcheck="false" placeholder="选择左侧文件后点「载入」，或直接在此编辑 JSON…"></textarea>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const CATEGORIES = [
+  {label:'情绪 Emotion', type:'scenes', sub:'emotion'},
+  {label:'动作 Action', type:'scenes', sub:'action'},
+  {label:'系统 System', type:'scenes', sub:'sys'},
+  {label:'状态 Status', type:'status'},
+  {label:'眼 Eye', type:'asset', channel:'eye'},
+  {label:'灯 Led', type:'asset', channel:'led'},
+  {label:'电机 Motor', type:'asset', channel:'motor'},
+  {label:'舵机 Servo', type:'asset', channel:'servo'},
+  {label:'音频 Audio', type:'asset', channel:'audio'},
+];
+// 默认折叠所有分类，避免文件过多时左侧需要拖很久
+const COLLAPSE_DEFAULT = new Set(CATEGORIES.map(catKey));
+let curPath = null;
+let curCat = null;
+/* —— 关联/搜索 用的全局状态 —— */
+let allFiles = new Set();       // {fullPath}
+let reverseMap = null;          // assetFullPath -> [sceneFullPath...]
+const collapse = new Set(COLLAPSE_DEFAULT);  // 已折叠的分类 key
+const subCollapse = new Set();               // 已折叠的前缀子分组 key
+let refTimer = null;
+const REF_META = {
+  eye  :{label:'🟩 眼部 Eye',  color:'#39c5cf'},
+  led  :{label:'🟠 LED 灯',     color:'#ffa657'},
+  motor:{label:'🔴 电机 Motor', color:'#ff7b72'},
+  servo:{label:'🟣 舵机 Servo', color:'#bc8cff'},
+  audio:{label:'🟢 音频 Audio', color:'#3fb950'},
+};
+const REF_OTHER = {label:'子其它', color:'#8b949e'};
+const REF_ORDER = ['servo','led','audio','motor','eye','other'];
+
+const $ = id => document.getElementById(id);
+const editor = $('editor');
+const pathInput = $('path');
+const stat = $('stat');
+
+function toast(msg, kind='ok'){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + kind;
+  clearTimeout(t._tm);
+  t._tm = setTimeout(()=>{ t.className='toast'; }, 2600);
+}
+function setStatus(s){ stat.textContent = s; }
+
+async function apiGet(url){
+  setStatus('请求中…');
+  const r = await fetch(url, {cache:'no-store'});
+  setStatus('就绪');
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+
+function buildPathPrefix(cat){
+  if(cat.type==='asset') return 'asset/'+cat.channel+'/';
+  if(cat.type==='scenes') return 'scenes/'+(cat.sub ? cat.sub+'/' : '');
+  return cat.type+'/';
+}
+
+async function loadTree(){
+  const sb = $('sidebar');
+  sb.innerHTML = '';
+  // 置顶：侧栏搜索框（固定于侧栏顶部，不参与滚动）
+  const sw = document.createElement('div');
+  sw.className = 'searchbox-wrap';
+  const inp = document.createElement('input');
+  inp.className = 'searchbox'; inp.id = 'search';
+  inp.placeholder = '🔍 所有分类中搜索文件名…';
+  sw.appendChild(inp);
+  sb.appendChild(sw);
+  inp.addEventListener('input', applySearch);
+  // 分类快速跳转条（点击展开并滚动到对应分类）
+  const jb = document.createElement('div');
+  jb.className = 'jumpbar';
+  for(const cat of CATEGORIES){
+    const ckey = catKey(cat);
+    const chip = document.createElement('button');
+    chip.className = 'jump-chip'; chip.dataset.key = ckey;
+    chip.textContent = cat.label;
+    chip.onclick = ()=>{
+      collapse.delete(ckey);
+      const head = sc.querySelector('.cat[data-key="'+ckey+'"]');
+      if(head){
+        head.classList.remove('collapsed');
+        // 展开该分类下的所有子分组，便于快速定位
+        const ul = head.nextElementSibling;
+        if(ul && ul.classList.contains('cat-list')){
+          ul.querySelectorAll('.sub-cat').forEach(s=>{
+            subCollapse.delete(s.dataset.skey);
+            s.classList.remove('collapsed');
+          });
+        }
+        head.scrollIntoView({block:'start', behavior:'smooth'});
+      }
+    };
+    jb.appendChild(chip);
+  }
+  sb.appendChild(jb);
+  // 侧栏工具按钮：全部展开 / 全部折叠
+  const tools = document.createElement('div');
+  tools.className = 'sidebar-tools';
+  const btnExpand = document.createElement('button');
+  btnExpand.textContent = '⤢ 全部展开';
+  btnExpand.title = '展开所有分类及子分组';
+  btnExpand.onclick = ()=>{
+    collapse.clear(); subCollapse.clear();
+    sc.querySelectorAll('.cat').forEach(el=>el.classList.remove('collapsed'));
+    sc.querySelectorAll('.sub-cat').forEach(el=>el.classList.remove('collapsed'));
+  };
+  const btnCollapseAll = document.createElement('button');
+  btnCollapseAll.textContent = '⤡ 全部折叠';
+  btnCollapseAll.title = '折叠所有分类及子分组';
+  btnCollapseAll.onclick = ()=>{
+    collapse.clear(); subCollapse.clear();
+    CATEGORIES.forEach(c=>collapse.add(catKey(c)));
+    sc.querySelectorAll('.cat').forEach(el=>el.classList.add('collapsed'));
+    sc.querySelectorAll('.sub-cat').forEach(el=>el.classList.add('collapsed'));
+  };
+  tools.appendChild(btnExpand);
+  tools.appendChild(btnCollapseAll);
+  sb.appendChild(tools);
+  // 可滚动列表区
+  const sc = document.createElement('div');
+  sc.className = 'sidebar-scroll';
+  sb.appendChild(sc);
+  allFiles.clear();
+  // 分区：前 4 项（情绪/动作/系统/状态）为「行为」，其余（资源类）为「资源」
+  const SECTION_NAMES = ['场景 & 状态', '硬件资源'];
+  let lastSection = -1;
+  let loadP = Promise.resolve();
+  for(const cat of CATEGORIES){
+    const ckey = catKey(cat);
+    const isAsset = cat.type==='asset';
+    const sec = isAsset ? 1 : 0;
+    if(sec !== lastSection){
+      const st = document.createElement('div');
+      st.className = 'section-title';
+      st.textContent = SECTION_NAMES[sec];
+      sc.appendChild(st);
+      lastSection = sec;
+    }
+    const head = document.createElement('div');
+    head.className = 'cat'; head.dataset.key = ckey;
+    if(collapse.has(ckey)) head.classList.add('collapsed');
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow';
+    arrow.textContent = '▾';
+    const label = document.createElement('span');
+    label.textContent = cat.label;
+    const count = document.createElement('span');
+    count.className = 'cat-count';
+    head.appendChild(arrow);
+    head.appendChild(label);
+    head.appendChild(count);
+    sc.appendChild(head);
+    const ul = document.createElement('div');
+    ul.className = 'cat-list';
+    sc.appendChild(ul);
+    head.onclick = ()=>{
+      if(collapse.has(ckey)) collapse.delete(ckey); else collapse.add(ckey);
+      head.classList.toggle('collapsed', collapse.has(ckey));
+    };
+    loadP = loadP.then(()=> loadCategory(cat, ckey, head, ul));
+  }
+  await loadP;
+  applySearch();
+}
+
+/* —— 提取文件名前缀作为子分组名（不含扩展名） —— */
+function subgroupName(f){
+  const base = f.replace(/\.json$/i,'');
+  const m = base.match(/^([a-zA-Z]+)_/);
+  if(m) return m[1];
+  return '其他';
+}
+
+/* —— 加载单个分类，文件过多时自动按前缀子分组 —— */
+async function loadCategory(cat, ckey, head, ul){
+  const count = head.querySelector('.cat-count');
+  try{
+    let url = '/api/behavior/list?type='+cat.type;
+    if(cat.channel) url += '&channel='+cat.channel;
+    const data = await apiGet(url);
+    let files = data.files || [];
+    // 场景按类别存放在子目录，按当前分类筛选并去掉子目录前缀显示
+    if(cat.type==='scenes' && cat.sub){
+      files = files.filter(f => f.startsWith(cat.sub+'/'))
+                   .map(f => f.slice(cat.sub.length+1));
+    }
+    count.dataset.total = files.length;
+    count.textContent = '('+files.length+')';
+    if(files.length===0){
+      const e = document.createElement('div');
+      e.className='empty'; e.style.padding='4px 24px'; e.style.fontSize='12px';
+      e.textContent='（空）';
+      ul.appendChild(e);
+      return;
+    }
+    files.sort();
+    // 文件多（≥10）时按前缀子分组，避免平铺很长
+    if(files.length >= 10){
+      renderSubgroups(files, cat, head, ul);
+    }else{
+      for(const f of files){
+        const it = makeFileItem(f, cat);
+        ul.appendChild(it);
+      }
+    }
+  }catch(e){
+    const er = document.createElement('div');
+    er.className='empty'; er.style.padding='4px 24px'; er.style.fontSize='12px';
+    er.style.color='var(--err)';
+    er.textContent='加载失败';
+    ul.appendChild(er);
+  }
+}
+
+/* —— 创建单个文件项 —— */
+function makeFileItem(f, cat){
+  const it = document.createElement('div');
+  it.className='file-item';
+  it.textContent = f;
+  const full = buildPathPrefix(cat)+f;
+  it.dataset.path = full;
+  it.onclick = ()=>selectFile(full, cat);
+  if(curPath===full) it.classList.add('active');
+  allFiles.add(full);
+  return it;
+}
+
+/* —— 按前缀子分组渲染文件 —— */
+function renderSubgroups(files, cat, head, ul){
+  const groups = {};
+  for(const f of files){
+    const g = subgroupName(f);
+    (groups[g] = groups[g] || []).push(f);
+  }
+  const groupKeys = Object.keys(groups).sort();
+  // 更常见 / 重要的组排在前面（如 led 的 off、set、breath、blink…保留字母序即可）
+  for(const g of groupKeys){
+    const items = groups[g];
+    const skey = catKey(cat)+'/'+g;
+    const sub = document.createElement('div');
+    sub.className = 'sub-cat'; sub.dataset.skey = skey;
+    // 子分组默认折叠，避免展开大类后仍是一长串文件
+    sub.classList.add('collapsed');
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow'; arrow.textContent = '▾';
+    const lbl = document.createElement('span');
+    lbl.textContent = g+' · '+items.length;
+    sub.appendChild(arrow);
+    sub.appendChild(lbl);
+    ul.appendChild(sub);
+    const sl = document.createElement('div');
+    sl.className = 'sub-list';
+    ul.appendChild(sl);
+    sub.onclick = ()=>{
+      if(subCollapse.has(skey)) subCollapse.delete(skey); else subCollapse.add(skey);
+      sub.classList.toggle('collapsed', subCollapse.has(skey));
+    };
+    for(const f of items){
+      const it = makeFileItem(f, cat);
+      it.classList.add('sub');
+      sl.appendChild(it);
+    }
+  }
+}
+
+// 左侧点击：选中并加载该文件到右侧编辑器
+async function selectFile(path, cat){
+  curPath = path; curCat = cat;
+  pathInput.value = path;
+  $('metaPath').textContent = path;
+  document.querySelectorAll('.file-item').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.file-item').forEach(el=>{
+    if(el.textContent===path.split('/').pop() && curCat===cat) el.classList.add('active');
+  });
+  document.querySelectorAll('.jump-chip').forEach(c=>c.classList.toggle('active', cat && catKey(cat)===c.dataset.key));
+  setStatus('加载中…');
+  editor.value = '加载中…';
+  highlight();
+  try{
+    const r = await fetch('/api/behavior/file?path='+encodeURIComponent(path), {cache:'no-store'});
+    if(!r.ok){ throw new Error('HTTP '+r.status); }
+    const text = await r.text();
+    try{
+      editor.value = JSON.stringify(JSON.parse(text), null, 2);
+      $('metaInfo').textContent = prettySize(text.length);
+    }catch(_){
+      editor.value = text;
+      $('metaInfo').textContent = prettySize(text.length) + ' · 非法 JSON';
+    }
+  }catch(e){
+    editor.value = '';
+    $('metaInfo').textContent = '';
+    toast('读取失败：'+e.message, 'err');
+  }
+  highlight();
+  renderRefs();
+  setStatus('就绪');
+}
+
+/* ================================================================
+ *  关联资源 / 快速跳转 / 侧栏搜索
+ * ================================================================ */
+function prettySize(n){
+  if(n<1024) return n+' B';
+  return (n/1024).toFixed(1)+' KB';
+}
+function catKey(cat){
+  return cat.type+(cat.channel?'/'+cat.channel:'')+(cat.sub?'/'+cat.sub:'');
+}
+async function openRef(fullPath){
+  if(!fullPath) return;
+  if(!allFiles.has(fullPath)){ toast('文件不存在：'+fullPath, 'err'); return; }
+  const cat = catByPath(fullPath);
+  if(cat){
+    const ck = catKey(cat);
+    collapse.delete(ck);
+    const head = document.querySelector('.cat[data-key="'+ck+'"]');
+    if(head) head.classList.remove('collapsed');
+  }
+  await selectFile(fullPath, cat);
+  const it = document.querySelector('.file-item[data-path="'+fullPath+'"]');
+  if(it){
+    // 若在子分组中，自动展开对应子分组
+    const sl = it.closest('.sub-list');
+    const sub = sl ? sl.previousElementSibling : null;
+    if(sub && sub.classList.contains('sub-cat')){
+      subCollapse.delete(sub.dataset.skey);
+      sub.classList.remove('collapsed');
+    }
+    it.classList.add('active'); it.scrollIntoView({block:'nearest', behavior:'smooth'});
+  }
+}
+function catByPath(full){
+  if(full.startsWith('asset/')){
+    const ch = full.slice('asset/'.length).split('/')[0];
+    return CATEGORIES.find(c=>c.type==='asset'&&c.channel===ch) || null;
+  }
+  if(full.startsWith('scenes/emotion/')) return CATEGORIES.find(c=>c.sub==='emotion');
+  if(full.startsWith('scenes/action/'))  return CATEGORIES.find(c=>c.sub==='action');
+  if(full.startsWith('scenes/sys/'))     return CATEGORIES.find(c=>c.sub==='sys');
+  if(full.startsWith('status/'))         return CATEGORIES.find(c=>c.type==='status');
+  const base = full.split('/')[0];
+  return CATEGORIES.find(c=>c.type===base) || null;
+}
+/* —— 侧栏搜索过滤（所有分类） —— */
+function applySearch(){
+  const inp = $('search'); if(!inp) return;
+  const q = inp.value.trim().toLowerCase();
+  document.querySelectorAll('.cat').forEach(head=>{
+    const ul = head.nextElementSibling;
+    if(!ul || !ul.classList.contains('cat-list')) return;
+    const count = head.querySelector('.cat-count');
+    const total = parseInt(count.dataset.total||'0', 10);
+    let shown = 0;
+    // 过滤子分组及其文件
+    ul.querySelectorAll('.sub-cat').forEach(sub=>{
+      const sl = sub.nextElementSibling;
+      let subShown = 0;
+      if(sl && sl.classList.contains('sub-list')){
+        sl.querySelectorAll('.file-item').forEach(it=>{
+          const ok = !q || it.textContent.toLowerCase().includes(q);
+          it.style.display = ok ? '' : 'none';
+          if(ok) subShown++;
+        });
+      }
+      if(q){
+        sub.classList.remove('collapsed');
+        sub.style.display = subShown ? '' : 'none';
+      }else{
+        sub.classList.toggle('collapsed', subCollapse.has(sub.dataset.skey));
+        sub.style.display = '';
+      }
+      shown += subShown;
+    });
+    // 过滤顶层文件项（未分组的小分类）
+    ul.querySelectorAll('.file-item:not(.sub)').forEach(it=>{
+      const ok = !q || it.textContent.toLowerCase().includes(q);
+      it.style.display = ok ? '' : 'none';
+      if(ok) shown++;
+    });
+    if(q){
+      head.classList.remove('collapsed');
+      count.textContent = '('+shown+(shown!==total && total>0 ? '/'+total : '')+')';
+    }else{
+      head.classList.toggle('collapsed', collapse.has(head.dataset.key));
+      count.textContent = '('+total+')';
+    }
+  });
+}
+/* —— 提取当前 JSON 中引用的资源 —— */
+function collectRefs(obj){
+  const out = [];
+  const seen = new Set();
+  const push = (full, label, channel)=>{
+    if(!full || seen.has(full)) return;
+    seen.add(full);
+    const missing = !allFiles.has(full);
+    out.push({full, label, channel: channel||'other', missing, back:false});
+  };
+  if(!obj || typeof obj!=='object') return out;
+  const timelines = [];
+  if(Array.isArray(obj.presets)){
+    for(const p of obj.presets) if(p && Array.isArray(p.timeline)) timelines.push(p.timeline);
+  }
+  if(Array.isArray(obj.timeline)) timelines.push(obj.timeline);
+  for(const tl of timelines){
+    for(const e of tl){
+      if(!e || typeof e!=='object') continue;
+      const ch = e.channel || e.type;
+      const name = e.asset;
+      if(ch && name) push('asset/'+ch+'/'+name, name, ch);
+    }
+  }
+  const cfg = (obj.config && typeof obj.config==='object') ? obj.config : {};
+  for(const key of ['preload_asset','preload_assets','preload','preload_file']){
+    const v = cfg[key];
+    if(!v) continue;
+    String(v).split(',').forEach(s=>{
+      s = s.trim(); if(!s) return;
+      let full = null;
+      if(allFiles.has(s)) full = s;
+      else for(const c of allFiles){ if(c.endsWith('/'+s)){ full = c; break; } }
+      if(full) push(full, s, 'config');
+    });
+  }
+  return out;
+}
+function chipHtml(ref){
+  const meta = REF_META[ref.channel] || REF_OTHER;
+  const cc = ref.missing ? 'var(--err)' : meta.color;
+  const cls = 'ref' + (ref.missing?' miss':'') + (ref.back?' back':'');
+  return '<span class="'+cls+'" data-full="'+escHtml(ref.full)+'" data-back="'+(ref.back?1:0)+'"'
+    + ' title="'+escHtml(ref.full)+(ref.missing?' —— ⚠ 文件不存在':'')+'">'
+    + '<i class="dot" style="background:'+cc+'"></i>' + escHtml(ref.label) + (ref.missing?' 缺失':'')
+    + '</span>';
+}
+
+function refGroups(obj){
+  const refs = collectRefs(obj);
+  if(!refs.length) return '';
+  const groups = {};
+  for(const r of refs){
+    const key = REF_META[r.channel] ? r.channel : 'other';
+    (groups[key] = groups[key] || []).push(r);
+  }
+  let html = '';
+  for(const key of REF_ORDER){
+    if(!groups[key]) continue;
+    const meta = key==='other' ? REF_OTHER : REF_META[key];
+    const chips = groups[key].map(chipHtml).join('');
+    html += '<div class="rg"><span class="rg-ttl">'+meta.label+'</span><span class="refs">'+chips+'</span></div>';
+  }
+  return html;
+}
+async function getReverseMap(){
+  if(reverseMap) return reverseMap;
+  reverseMap = {};
+  const roots = [...allFiles].filter(f=>f.startsWith('scenes/')||f.startsWith('status/'));
+  for(const sp of roots){
+    try{
+      const r = await fetch('/api/behavior/file?path='+encodeURIComponent(sp), {cache:'no-store'});
+      if(!r.ok) continue;
+      const raw = await r.text();
+      let obj; try{ obj = JSON.parse(raw); }catch(_){ continue; }
+      for(const ref of collectRefs(obj)){
+        (reverseMap[ref.full] = reverseMap[ref.full] || []).push(sp);
+      }
+    }catch(_){}
+  }
+  return reverseMap;
+}
+async function renderRefs(){
+  const bar = $('linkbar'), body = $('refbody');
+  if(!bar || !body){ return; }
+  const here = getCurrentPath() || curPath;
+  if(!here){ bar.classList.remove('show'); return; }
+  let obj = null;
+  try{ obj = editor.value ? JSON.parse(editor.value) : null; }catch(_){ obj = null; }
+  let out = '';
+  if(obj && (Array.isArray(obj.presets)||Array.isArray(obj.timeline))){
+    out += refGroups(obj);
+  }
+  if(here.startsWith('asset/')){
+    try{
+      const map = await getReverseMap();
+      const rev = (map[here]||[]).slice().sort();
+      if(rev.length){
+        const chips = rev.map(p=>({full:p, label:p.split('/').pop(), channel:'', missing:false, back:true})).map(chipHtml).join('');
+        out += '<div class="rg"><span class="rg-ttl">↺ 被引用 By</span><span class="refs">'+chips+'</span></div>';
+      }
+    }catch(_){}
+  }
+  const nChips = out ? (out.match(/class="ref/g)||[]).length : 0;
+  $('refcount').textContent = nChips ? nChips+' 项 · 点按即跳转' : '';
+  if(!out){
+    body.innerHTML = '<div class="ref-empty">当前文件暂无关联资源（打开场景/状态可看到其引用的资源）。</div>';
+  }else{
+    body.innerHTML = out;
+    body.querySelectorAll('.ref').forEach(el=>{
+      el.onclick = ()=> openRef(el.dataset.full, el.getAttribute('data-back')==='1');
+    });
+  }
+  bar.classList.add('show');
+}
+function refreshRefsSoon(){
+  clearTimeout(refTimer);
+  refTimer = setTimeout(renderRefs, 180);
+}
+
+/* ================================================================
+ *  JSON 语法高亮 + 滚动同步
+ * ================================================================ */
+const hl = $('hl');
+function escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function highlight(){
+  const text = editor.value;
+  if(!text){ hl.innerHTML = ''; return; }
+  // 单次扫描：键名(含冒号) / 字符串 / 数字 / true|false / null / 标点
+  const re = /("(?:\\.|[^"\\])*"\s*:)|("(?:\\.|[^"\\])*")|(-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|(\btrue\b|\bfalse\b)|(\bnull\b)|([{}\[\],:])/g;
+  let out = '', last = 0, m;
+  while((m = re.exec(text)) !== null){
+    out += escHtml(text.slice(last, m.index));
+    if(m[1] !== undefined){      // 键名 + 冒号 → 青色
+      out += '<span class="k">'+escHtml(m[1])+'</span>';
+    } else if(m[2] !== undefined){ // 字符串 → 绿色
+      out += '<span class="s">'+escHtml(m[2])+'</span>';
+    } else if(m[3] !== undefined){ // 数字 → 橙色
+      out += '<span class="n">'+escHtml(m[3])+'</span>';
+    } else if(m[4] !== undefined){ // true/false → 紫色
+      out += '<span class="b">'+escHtml(m[4])+'</span>';
+    } else if(m[5] !== undefined){ // null → 红色
+      out += '<span class="l">'+escHtml(m[5])+'</span>';
+    } else {                       // 标点 → 灰色
+      out += '<span class="p">'+escHtml(m[6])+'</span>';
+    }
+    last = m.index + m[0].length;
+  }
+  out += escHtml(text.slice(last));
+  hl.innerHTML = out;
+}
+
+// 输入 / 粘贴 / 载入后高亮
+editor.addEventListener('input', highlight);
+// 滚动同步：高亮层跟随 textarea 滚动
+editor.addEventListener('scroll', ()=>{ hl.scrollTop = editor.scrollTop; hl.scrollLeft = editor.scrollLeft; });
+
+function getCurrentPath(){
+  // 优先用输入框的值（允许新建/改名），否则当前选中
+  const p = pathInput.value.trim();
+  if(p) return p;
+  return curPath;
+}
+
+async function saveFile(){
+  const path = getCurrentPath();
+  if(!path){ toast('请先选择或输入路径', 'warn'); return; }
+  if(!/^(\w+\/)+[\w.\-]+$/.test(path) && !/^(scenes|status|asset)\/[\w\/.\-]+$/.test(path)){
+    toast('路径格式不合法（需如 scenes/x.json）', 'warn'); return;
+  }
+  let obj;
+  try{
+    obj = JSON.parse(editor.value);
+  }catch(e){
+    toast('JSON 语法错误：'+e.message, 'err');
+    return;
+  }
+  setStatus('保存中…');
+  try{
+    const r = await fetch('/api/behavior/file',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'save', path:path, content:obj})
+    });
+    const d = await r.json();
+    if(d.status==='ok'){
+      toast('已保存 '+path, 'ok');
+      curPath = path;
+      pathInput.value = path;
+      $('metaPath').textContent = path;
+      await loadTree();
+      renderRefs();
+    }else{
+      toast('保存失败：'+(d.error||''), 'err');
+    }
+  }catch(e){
+    toast('保存失败：'+e.message, 'err');
+  }
+  setStatus('就绪');
+}
+
+async function deleteFile(){
+  const path = getCurrentPath();
+  if(!path){ toast('请先选择文件', 'warn'); return; }
+  if(!confirm('确认删除 '+path+'？')) return;
+  setStatus('删除中…');
+  try{
+    const r = await fetch('/api/behavior/file',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'delete', path:path})
+    });
+    const d = await r.json();
+    if(d.status==='ok'){
+      toast('已删除 '+path, 'ok');
+      if(curPath===path){ editor.value=''; highlight(); curPath=null; pathInput.value=''; $('metaPath').textContent='未选择文件'; $('metaInfo').textContent=''; }
+      await loadTree();
+      reverseMap = null;
+      renderRefs();
+    }else{
+      toast('删除失败：'+(d.error||''), 'err');
+    }
+  }catch(e){
+    toast('删除失败：'+e.message, 'err');
+  }
+  setStatus('就绪');
+}
+
+function newFile(){
+  const cat = curCat || CATEGORIES[0];
+  const prefix = buildPathPrefix(cat);
+  const name = prompt('新文件名（含 .json）：', prefix+'new.json');
+  if(!name) return;
+  const full = name.startsWith(prefix) ? name : (prefix + name);
+  pathInput.value = full;
+  curPath = full;
+  editor.value = JSON.stringify({
+    priority:'normal',
+    variants:[{name:'v1',weight:1,timeline:[]}]
+  }, null, 2);
+  highlight();
+  $('metaPath').textContent = full;
+  $('metaInfo').textContent = '新建未保存';
+  editor.focus();
+}
+
+function formatJson(){
+  try{
+    editor.value = JSON.stringify(JSON.parse(editor.value), null, 2);
+    highlight();
+    toast('已格式化', 'ok');
+  }catch(e){
+    toast('JSON 语法错误：'+e.message, 'err');
+  }
+}
+
+async function playFile(){
+  const path = getCurrentPath();
+  if(!path){ toast('请先选择或输入路径', 'warn'); return; }
+  setStatus('执行中…');
+  try{
+    const r = await fetch('/api/behavior/play',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({path:path})
+    });
+    const d = await r.json();
+    if(d.status==='ok'){
+      toast('✅ 已执行 '+path, 'ok');
+    }else{
+      toast('执行失败：'+(d.error||''), 'err');
+    }
+  }catch(e){
+    toast('执行失败：'+e.message, 'err');
+  }
+  setStatus('就绪');
+}
+
+// Tab 键插入两空格
+editor.addEventListener('keydown', e=>{
+  if(e.key==='Tab'){
+    e.preventDefault();
+    const s=editor.selectionStart, en=editor.selectionEnd;
+    editor.value = editor.value.slice(0,s)+'  '+editor.value.slice(en);
+    editor.selectionStart = editor.selectionEnd = s+2;
+  }
+  if((e.ctrlKey||e.metaKey) && e.key==='s'){ e.preventDefault(); saveFile(); }
+});
+
+$('btnNew').onclick = newFile;
+$('btnSave').onclick = saveFile;
+$('btnDelete').onclick = deleteFile;
+$('btnPlay').onclick = playFile;
+$('btnFmt').onclick = formatJson;
+$('btnRefresh').onclick = loadTree;
+
+// 编辑时实时刷新关联面板（防抖）
+editor.addEventListener('input', refreshRefsSoon);
+// 关联面板标题可折叠
+$('linkhead').onclick = ()=> $('linkbar').classList.toggle('collapsed');
+
+loadTree();
+highlight();
+renderRefs();
+</script>
+</body>
+</html>

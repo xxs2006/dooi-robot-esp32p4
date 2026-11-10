@@ -1,0 +1,8 @@
+{
+  "asset_id": "game_match_rose_wrong_blue",
+  "description": "游戏回合：左(错)玫红 右(match)蓝",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "solid", "left_color": "#FF2244", "right_color": "#2266FF" }
+  ]
+}

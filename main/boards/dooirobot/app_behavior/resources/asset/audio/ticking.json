@@ -1,0 +1,8 @@
+{
+  "asset_id": "audio_ticking_clock",
+  "description": "番茄钟滴答声",
+  "type": "audio",
+  "keyframes": [
+    { "time_ms": 0, "clip": "ticking" }
+  ]
+}

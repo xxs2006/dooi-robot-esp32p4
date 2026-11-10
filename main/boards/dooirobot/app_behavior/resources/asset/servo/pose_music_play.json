@@ -1,0 +1,19 @@
+{
+  "asset_id": "servo_pose_music_play",
+  "description": "音乐页面姿态：双臂90度放松",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 130,
+      "right_arm": 140,
+      "duration": 1000
+    },
+{
+      "time_ms": 1200,
+      "left_arm": 140,
+      "right_arm": 130,
+      "duration": 1000
+    }
+  ]
+}

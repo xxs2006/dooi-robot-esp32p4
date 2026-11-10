@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_rainbow_1400ms",
+  "description": "LED彩虹灯，周期1400ms，对称（开心alt用）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "rainbow", "period_ms": 1400, "symmetric": true }
+  ]
+}

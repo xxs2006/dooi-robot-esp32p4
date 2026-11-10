@@ -1,0 +1,21 @@
+{
+  "scene_name": "game_round_2_left",
+  "description": "第3回合-正确侧在左：蓝色虹膜，左(match)蓝右(错)玫红，注视左",
+  "priority": "high",
+  "config": {
+    "no_restore": true
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "第3回合-正确侧在左",
+      "timeline": [
+        { "time_ms": 0, "type": "iris",  "asset": "blue.json" },
+        { "time_ms": 50,  "type": "audio", "repeat": 1, "asset": "happy.json" },
+        { "time_ms": 0, "type": "led",   "asset": "game_match_rose_wrong_blue.json" },
+        { "time_ms": 0, "type": "eye",   "asset": "focus_left.json" }
+      ]
+    }
+  ]
+}

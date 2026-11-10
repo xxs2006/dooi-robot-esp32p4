@@ -1,0 +1,9 @@
+{
+  "asset_id": "motor_spin_right",
+  "description": "原地右转：左80右-80，500ms（鄙视转身）",
+  "type": "motor",
+  "keyframes": [
+    { "time_ms": 0,   "speed_l": 80,  "speed_r": -80, "duration_ms": 500 },
+    { "time_ms": 500, "speed_l": 0,   "speed_r": 0,   "duration_ms": 0 }
+  ]
+}

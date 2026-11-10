@@ -1,0 +1,14 @@
+{
+  "asset_id": "servo_head_angry_look_left",
+  "description": "愤怒左视捶打：先双臂135，然后左臂快速小幅捶打3次",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,   "left_arm": 135, "right_arm": 135, "duration": 500 },
+    { "time_ms": 1000, "left_arm": 145, "right_arm": 135, "duration": 100 },
+    { "time_ms": 1100, "left_arm": 135, "right_arm": 135, "duration": 100 },
+    { "time_ms": 1200, "left_arm": 145, "right_arm": 135, "duration": 100 },
+    { "time_ms": 1300, "left_arm": 135, "right_arm": 135, "duration": 100 },
+    { "time_ms": 1400, "left_arm": 145, "right_arm": 135, "duration": 100 },
+    { "time_ms": 1500, "left_arm": 135, "right_arm": 135, "duration": 100 }
+  ]
+}

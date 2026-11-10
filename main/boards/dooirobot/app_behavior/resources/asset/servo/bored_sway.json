@@ -1,0 +1,10 @@
+{
+  "asset_id": "servo_bored_sway",
+  "description": "无聊动作：双臂缓慢左右变换角度",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 80, "right_arm": 80, "duration": 2000 },
+    { "time_ms": 3000, "left_arm": 80, "right_arm": 70, "duration": 1800 },
+    { "time_ms": 5800, "left_arm": 80, "right_arm": 80, "duration": 1800 }
+  ]
+}

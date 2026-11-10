@@ -1,0 +1,37 @@
+{
+  "asset_id": "pet_headpat",
+  "description": "被摸头：双臂内收轻晃",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 70,
+      "right_arm": 70,
+      "duration": 400
+    },
+    {
+      "time_ms": 400,
+      "left_arm": 60,
+      "right_arm": 80,
+      "duration": 250
+    },
+    {
+      "time_ms": 650,
+      "left_arm": 80,
+      "right_arm": 60,
+      "duration": 250
+    },
+    {
+      "time_ms": 900,
+      "left_arm": 70,
+      "right_arm": 70,
+      "duration": 300
+    },
+    {
+      "time_ms": 1200,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 500
+    }
+  ]
+}

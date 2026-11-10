@@ -1,0 +1,11 @@
+{
+  "asset_id": "servo_arm_hug_open_close",
+  "description": "拥抱动作：双臂45→0→30→90归位",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 45, "right_arm": 45, "duration": 600 },
+    { "time_ms": 800,  "left_arm": 0,  "right_arm": 0,  "duration": 500 },
+    { "time_ms": 1800, "left_arm": 30, "right_arm": 30, "duration": 600 },
+    { "time_ms": 2200, "left_arm": 90, "right_arm": 90, "duration": 800 }
+  ]
+}

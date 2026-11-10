@@ -1,0 +1,9 @@
+{
+  "asset_id": "servo_disdain_right",
+  "description": "鄙视动作：右臂90→0度下垂，左臂不动最后复位",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,   "left_arm": 135, "right_arm": 90,  "duration": 500 },
+    { "time_ms": 1400, "left_arm": 135, "right_arm": 0,   "duration": 600 }
+  ]
+}

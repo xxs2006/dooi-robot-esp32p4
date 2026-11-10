@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_breath_deeppink_800ms",
+  "description": "LED深粉色呼吸灯，周期800ms（喜爱用）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "breath", "color": "#FF1493", "period_ms": 800, "symmetric": true }
+  ]
+}

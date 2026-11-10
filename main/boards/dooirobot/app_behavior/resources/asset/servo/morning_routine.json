@@ -1,0 +1,15 @@
+{
+  "asset_id": "servo_morning_routine",
+  "description": "早安流程：双臂80→揉眼(右50→60→50)→伸170→落20→归位90",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 80,  "right_arm": 80,  "duration": 2000 },
+    { "time_ms": 3500, "left_arm": 80,  "right_arm": 50,  "duration": 800 },
+    { "time_ms": 4100, "left_arm": 80,  "right_arm": 60,  "duration": 400 },
+    { "time_ms": 4400, "left_arm": 80,  "right_arm": 50,  "duration": 400 },
+    { "time_ms": 5000, "left_arm": 80,  "right_arm": 90,  "duration": 600 },
+    { "time_ms": 5600, "left_arm": 170, "right_arm": 170, "duration": 1200 },
+    { "time_ms": 7600, "left_arm": 20,  "right_arm": 20,  "duration": 1200 },
+    { "time_ms": 9800, "left_arm": 90,  "right_arm": 90,  "duration": 800 }
+  ]
+}

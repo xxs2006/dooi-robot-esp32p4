@@ -1,0 +1,37 @@
+{
+  "asset_id": "kiss_blow",
+  "description": "飞吻：右臂贴脸→飞出→回正",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 400
+    },
+    {
+      "time_ms": 300,
+      "left_arm": 90,
+      "right_arm": 20,
+      "duration": 350
+    },
+    {
+      "time_ms": 650,
+      "left_arm": 90,
+      "right_arm": 55,
+      "duration": 300
+    },
+    {
+      "time_ms": 950,
+      "left_arm": 90,
+      "right_arm": 25,
+      "duration": 250
+    },
+    {
+      "time_ms": 1150,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 500
+    }
+  ]
+}

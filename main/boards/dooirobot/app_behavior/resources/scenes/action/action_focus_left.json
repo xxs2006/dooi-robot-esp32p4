@@ -1,0 +1,21 @@
+{
+  "scene_name": "action_focus_left",
+  "description": "注视左侧+右蓝灯+右手指向（低优先级，可中断）",
+  "priority": "low",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "point_left",
+      "weight": 100,
+      "description": "瞟左+左灭右蓝+右臂指向左停住，结束关灯",
+      "timeline": [
+        { "time_ms": 0,   "type": "eye",   "repeat": 1, "asset": "focus_left.json" },
+        { "time_ms": 0,   "type": "led",   "repeat": 1, "asset": "set_blue_left_off_right.json" },
+        { "time_ms": 0,   "type": "servo", "repeat": 1, "asset": "focus_point_left.json" },
+        { "time_ms": 700, "type": "led",   "repeat": 1, "asset": "off.json" }
+      ]
+    }
+  ]
+}

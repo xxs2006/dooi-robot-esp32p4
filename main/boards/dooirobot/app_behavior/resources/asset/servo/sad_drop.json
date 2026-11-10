@@ -1,0 +1,25 @@
+{
+  "asset_id": "servo_sad_drop",
+  "description": "悲伤动作：双臂缓缓下垂到身侧无力内收",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 400
+    },
+    {
+      "time_ms": 300,
+      "left_arm": 150,
+      "right_arm": 150,
+      "duration": 900
+    },
+    {
+      "time_ms": 1200,
+      "left_arm": 165,
+      "right_arm": 165,
+      "duration": 600
+    }
+  ]
+}

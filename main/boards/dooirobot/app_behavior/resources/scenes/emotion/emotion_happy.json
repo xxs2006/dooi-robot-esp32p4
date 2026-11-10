@@ -1,0 +1,109 @@
+{
+  "scene_name": "happy",
+  "description": "开心场景：笑眼+彩虹+可选电机跳跳（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "rainbow_smile",
+      "weight": 40,
+      "description": "彩虹微笑：笑眼+1秒彩虹灯，无舵机",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "laugh.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "rainbow_1000ms.json"
+        }
+      ]
+    },
+    {
+      "name": "bounce_jump",
+      "weight": 35,
+      "description": "开心跳跳：眯眼笑+1.4s彩虹+前后蹦跶+关灯",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "laugh.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy1.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 2,
+          "asset": "rainbow_1400ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "forward_hop.json"
+        },
+        {
+          "time_ms": 500,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "backward_hop.json"
+        },
+        {
+          "time_ms": 2000,
+          "type": "led",
+          "repeat": 1,
+          "asset": "off.json"
+        }
+      ]
+    },
+    {
+      "name": "arm_flap",
+      "weight": 25,
+      "description": "双臂扇动：大笑眼+青色呼吸+双臂交替摆动（已自复位）",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "laugh.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy2.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 4,
+          "asset": "breath_teal_800ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "happy_alt2.json"
+        }
+      ]
+    }
+  ]
+}

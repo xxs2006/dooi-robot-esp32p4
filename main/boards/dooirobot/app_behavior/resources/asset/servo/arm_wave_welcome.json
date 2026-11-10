@@ -1,0 +1,11 @@
+{
+  "asset_id": "servo_arm_wave_welcome",
+  "description": "欢迎：双臂15→45→15→90归位",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,    "left_arm": 15, "right_arm": 15, "duration": 600 },
+    { "time_ms": 1500, "left_arm": 45, "right_arm": 45, "duration": 500 },
+    { "time_ms": 1900, "left_arm": 15, "right_arm": 15, "duration": 500 },
+    { "time_ms": 2700, "left_arm": 90, "right_arm": 90, "duration": 800 }
+  ]
+}

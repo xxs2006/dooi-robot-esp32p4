@@ -1,0 +1,19 @@
+{
+  "asset_id": "sleep_rest",
+  "description": "休眠：双臂缓缓垂落自然",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 90,
+      "right_arm": 90,
+      "duration": 800
+    },
+    {
+      "time_ms": 700,
+      "left_arm": 135,
+      "right_arm": 135,
+      "duration": 1000
+    }
+  ]
+}

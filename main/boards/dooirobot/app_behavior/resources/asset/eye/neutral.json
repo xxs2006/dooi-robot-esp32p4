@@ -1,0 +1,8 @@
+{
+  "asset_id": "neutral",
+  "description": "默认表情",
+  "type": "eye",
+  "keyframes": [
+    { "time_ms": 0, "expr": "default" }
+  ]
+}

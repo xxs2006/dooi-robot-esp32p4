@@ -1,0 +1,47 @@
+{
+  "scene_name": "tired",
+  "description": "疲惫场景：困眼+暗琥珀呼吸+双臂下垂+打哈欠眨眼（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "yawn",
+      "weight": 100,
+      "description": "疲惫打哈欠：困眼+暗琥珀呼吸+双臂缓慢下垂+眨眼",
+      "timeline": [
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "sad.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_darkamber_2500ms.json"
+        },
+        {
+          "time_ms": 200,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "tired_drop.json"
+        },
+        {
+          "time_ms": 800,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "eye_move.json"
+        },
+        {
+          "time_ms": 1600,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "neutral.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "scene_name": "tomato_tick",
+  "description": "番茄钟滴答提示音效（纯音频）",
+  "priority": "normal",
+  "config": {
+    "no_restore": true
+  },
+  "presets": [
+    {
+      "name": "default",
+      "weight": 100,
+      "description": "番茄钟滴答：ticking 音效",
+      "timeline": [
+        { "time_ms": 0, "type": "audio", "repeat": 1, "asset": "ticking.json" }
+      ]
+    }
+  ]
+}

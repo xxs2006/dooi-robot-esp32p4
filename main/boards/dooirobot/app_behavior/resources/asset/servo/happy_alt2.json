@@ -1,0 +1,10 @@
+{
+  "asset_id": "servo_happy_alt2",
+  "description": "开心双臂交替张开：左120/右60 → 左60/右120 → 归位90",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0,   "left_arm": 120, "right_arm": 60,  "duration": 500 },
+    { "time_ms": 300, "left_arm": 60,  "right_arm": 120, "duration": 350 },
+    { "time_ms": 650, "left_arm": 90,  "right_arm": 90,  "duration": 400 }
+  ]
+}

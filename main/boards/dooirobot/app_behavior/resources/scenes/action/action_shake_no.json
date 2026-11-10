@@ -1,0 +1,47 @@
+﻿{
+  "scene_name": "action_shake_no",
+  "description": "摇头拒绝：怒眼+红灯+双臂收+左右晃3次+停（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "absolutely_not",
+      "weight": 100,
+      "description": "强烈拒绝：怒眼+红灯+双臂收+身体左右摇三次+停+手臂归位",
+      "timeline": [
+        {
+          "time_ms": 50,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "angry.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "angry.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 8,
+          "asset": "blink_red_250ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "head_shake_no.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "sway_side.json"
+        }
+      ]
+    }
+  ]
+}

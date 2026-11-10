@@ -1,0 +1,53 @@
+{
+  "scene_name": "disdain",
+  "description": "鄙夷场景：挑眉+紫呼吸+翻白眼摆手+轻哼（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "turn_away",
+      "weight": 100,
+      "description": "不屑一顾：怀疑眼神+红灯非对称闪+右臂垂下+原地右转，最后眼回正，自动复位",
+      "timeline": [
+        {
+          "time_ms": 50,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "wow.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "suspicious.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "blink_red_1000ms_nosym.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "disdain_right.json"
+        },
+        {
+          "time_ms": 400,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "spin_right.json"
+        },
+        {
+          "time_ms": 1400,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "eye_move.json"
+        }
+      ]
+    }
+  ]
+}

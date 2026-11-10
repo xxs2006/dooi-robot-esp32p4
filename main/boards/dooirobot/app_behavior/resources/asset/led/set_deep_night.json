@@ -1,0 +1,8 @@
+{
+  "asset_id": "led_set_deep_night",
+  "description": "LED左右设为深夜色（晚安熟睡）",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "set", "left_color": "#110800", "right_color": "#110800" }
+  ]
+}

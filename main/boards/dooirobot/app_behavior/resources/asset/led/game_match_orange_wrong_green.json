@@ -1,0 +1,8 @@
+{
+  "asset_id": "game_match_orange_wrong_green",
+  "description": "游戏回合：左(错)橙 右(match)绿",
+  "type": "led",
+  "keyframes": [
+    { "time_ms": 0, "mode": "solid", "left_color": "#FF5500", "right_color": "#00CC66" }
+  ]
+}

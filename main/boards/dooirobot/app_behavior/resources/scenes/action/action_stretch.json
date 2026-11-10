@@ -1,0 +1,53 @@
+﻿{
+  "scene_name": "action_stretch",
+  "description": "伸懒腰：昏昏欲睡→大伸展→打哈欠→换臂→笑眼→归位（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "wake_up_stretch",
+      "weight": 100,
+      "description": "起床拉伸：看下+暖白呼吸1.5s+双臂上举→打哈欠瞪目→左右臂交替→笑眼，舵机自复位",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "focus_below_center.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 6,
+          "asset": "breath_warmwhite_1500ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "arm_stretch_relax.json"
+        },
+        {
+          "time_ms": 4200,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "amazed.json"
+        },
+        {
+          "time_ms": 7300,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        }
+      ]
+    }
+  ]
+}

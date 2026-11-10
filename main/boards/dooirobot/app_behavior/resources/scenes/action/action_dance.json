@@ -1,0 +1,47 @@
+﻿{
+  "scene_name": "action_dance",
+  "description": "跳舞场景：绿呼吸+双臂左右摆+换色灯（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "disco_dance",
+      "weight": 100,
+      "description": "蹦迪：绿呼吸1s+手臂摇摆+洋红/青→黄/橙换色，舵机已自复位",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "laugh.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_green_1000ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "dance_sway.json"
+        },
+        {
+          "time_ms": 1350,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_magenta_cyan.json"
+        },
+        {
+          "time_ms": 1850,
+          "type": "led",
+          "repeat": 1,
+          "asset": "set_yellow_orange.json"
+        }
+      ]
+    }
+  ]
+}

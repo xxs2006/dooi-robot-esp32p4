@@ -1,0 +1,47 @@
+﻿{
+  "scene_name": "action_welcome",
+  "description": "欢迎：笑眼+橙呼吸+双臂15度+上前+抬起→落→停电机+归位（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "open_arms",
+      "weight": 100,
+      "description": "热情欢迎：笑眼+橙呼吸1.2s+双臂张开+上前一步+抬手两次+电机停+双臂归位（舵机自复位）",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 3,
+          "asset": "breath_orange_1200ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "arm_wave_welcome.json"
+        },
+        {
+          "time_ms": 500,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "forward_step_quick.json"
+        }
+      ]
+    }
+  ]
+}

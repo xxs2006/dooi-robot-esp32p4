@@ -1,0 +1,8 @@
+{
+  "asset_id": "servo_body_startle_jolt",
+  "description": "惊讶动作：双臂快速抬到115度",
+  "type": "servo",
+  "keyframes": [
+    { "time_ms": 0, "left_arm": 115, "right_arm": 115, "duration": 500 }
+  ]
+}

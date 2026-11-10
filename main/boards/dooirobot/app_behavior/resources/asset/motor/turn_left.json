@@ -1,0 +1,9 @@
+{
+  "asset_id": "motor_turn_left",
+  "description": "好奇左转：左50右-50，300ms（歪头看左）",
+  "type": "motor",
+  "keyframes": [
+    { "time_ms": 0,   "speed_l": 50,  "speed_r": -50, "duration_ms": 300 },
+    { "time_ms": 300, "speed_l": 0,   "speed_r": 0,   "duration_ms": 0 }
+  ]
+}

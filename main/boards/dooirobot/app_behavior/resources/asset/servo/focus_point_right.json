@@ -1,0 +1,19 @@
+{
+  "asset_id": "servo_focus_point_left",
+  "description": "轻微抖动",
+  "type": "servo",
+  "keyframes": [
+    {
+      "time_ms": 0,
+      "left_arm": 125,
+      "right_arm": 135,
+      "duration": 200
+    },
+    {
+      "time_ms": 100,
+      "left_arm": 135,
+      "right_arm": 135,
+      "duration": 500
+    }
+  ]
+}

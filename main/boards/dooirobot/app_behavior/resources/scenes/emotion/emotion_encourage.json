@@ -1,0 +1,47 @@
+{
+  "scene_name": "encourage",
+  "description": "鼓励加油：眯眼笑+绿呼吸+右臂举→左臂举→双臂齐举→上前→归位（中优先级，可中断）",
+  "priority": "normal",
+  "config": {
+    "preload_assets": "status_standby.json"
+  },
+  "presets": [
+    {
+      "name": "you_can_do_it",
+      "weight": 100,
+      "description": "打气：眯眼笑+绿快呼吸600ms+右拳举落→左拳举落→双拳齐→前跳一步→双臂归位（舵机自复位）",
+      "timeline": [
+        {
+          "time_ms": 100,
+          "type": "audio",
+          "repeat": 1,
+          "asset": "happy.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "eye",
+          "repeat": 1,
+          "asset": "happy1.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "led",
+          "repeat": 7,
+          "asset": "breath_green_600ms.json"
+        },
+        {
+          "time_ms": 0,
+          "type": "servo",
+          "repeat": 1,
+          "asset": "encourage_cheer.json"
+        },
+        {
+          "time_ms": 3100,
+          "type": "motor",
+          "repeat": 1,
+          "asset": "forward_step.json"
+        }
+      ]
+    }
+  ]
+}
